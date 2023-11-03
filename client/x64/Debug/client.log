@@ -1,34 +1,8 @@
-﻿  file.cpp
+﻿  main.cpp
 C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
 C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
 C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
 C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
 C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
 C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-  main.cpp
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-  mission.cpp
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-  packet.cpp
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(142,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(152,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.h(160,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.cpp(77,56): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.cpp(95,28): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.cpp(100,30): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\Desktop\work\vs\locust\client\packet.cpp(110,16): warning C4244: “初始化”: 从“__int64”转换到“int”，可能丢失数据
-  正在生成代码...
   client.vcxproj -> C:\Users\ljg\Desktop\work\vs\locust\locust\x64\Debug\client.exe

