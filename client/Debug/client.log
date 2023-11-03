@@ -1,0 +1,3 @@
+﻿  utils.cpp
+C:\Users\ljg\Desktop\work\vs\locust\client\utils.cpp(282): warning C4715: “getOsBits”: 不是所有的控件路径都返回值
+  client.vcxproj -> C:\Users\ljg\Desktop\work\vs\locust\locust\Debug\client.exe

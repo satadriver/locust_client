@@ -7,6 +7,12 @@
 *.o
 *.obj
 
+*.VC.db
+*.ipch
+*.pdb
+
+
+
 # Precompiled Headers
 *.gch
 *.pch
