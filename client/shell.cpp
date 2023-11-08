@@ -6,7 +6,7 @@
 
 
 
-int __stdcall shell(char * cmd) {
+int __stdcall shell(const char * cmd) {
 	int ret = 0;
 
 	wchar_t wstrcmd[1024];
@@ -28,8 +28,8 @@ int __stdcall shell(char * cmd) {
 
 
 
-int runShell(char* cmd) {
-	HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)shell, cmd, 0, 0);
+int runShell(const char* cmd) {
+	HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)shell, (LPVOID)cmd, 0, 0);
 	if (ht)
 	{
 		CloseHandle(ht);

@@ -115,7 +115,7 @@ DWORD setKeyValueChar(HKEY hMainKey, char* szSubKey, char* szKeyName, char* szKe
 		}
 		else
 		{
-			mylog("key has been existed\r\n");
+			runLog("key has been existed\r\n");
 		}
 
 		RegCloseKey(hKey);

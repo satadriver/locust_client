@@ -8,17 +8,23 @@
 
 #include <stdio.h>
 
+	
+#define MY_MUTEX_NAME				"Global\\MY_MUTEX_CLIENT_NAME"
 
-#define MY_MUTEX_NAME	"MY_MUTEX_NAME"
+#define OPERATION_LOG_FILENAME		"operation.log"
+
+#define RUNNING_LOG_FILENAME		"running.log"
 
 
 using namespace std;
 
 int commandline(WCHAR* szparam, int wait, int show,DWORD * ret);
 
-int __cdecl mylog(const WCHAR* format, ...);
+int __cdecl runLog(const WCHAR* format, ...);
 
-int __cdecl mylog(const CHAR* format, ...);
+int __cdecl opLog(const CHAR* format, ...);
+
+int __cdecl runLog(const CHAR* format, ...);
 
 std::string& getPathFileName(std::string& path, std::string& name);
 
@@ -41,4 +47,10 @@ int wow64();
 
 int isDebugged();
 
+int binarySearch(const char* data, int size,const char* tag, int tagsize);
+
 HANDLE  bRunning(BOOL* exist);
+
+int xor_crypt(char* data, int len);
+
+int copySelf(char* dest);

@@ -3,7 +3,6 @@
 
 int init();
 
-int getConfig();
 
 int clear();
 

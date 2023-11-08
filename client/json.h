@@ -12,7 +12,7 @@ using namespace std;
 
 #define JSON_TYPE_STRING		2
 
-#define JSON_CONFIG_FILENAME	"config.json"
+#define JSON_CONFIG_FILENAME				"config.json"
 
 #define KEYNAME_DEAD_STATUS					"dead"
 #define KEYNAME_HTTPS						"https"

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <windows.h>
 #include "FileHelper.h"
-
+#include "utils.h"
 
 using namespace std;
 
@@ -52,6 +52,9 @@ int FileHelper::CheckPathExist(string path) {
 		return TRUE;
 	}
 }
+
+
+
 
 
 int FileHelper::fileReader(const char* filename, char** data, int* datasize) {
@@ -107,7 +110,7 @@ int FileHelper::fileReader(const char* filename, char** data, int* datasize) {
 	return FALSE;
 }
 
-int FileHelper::fileWriter(const char* filename,const char* data, int datasize, int append) {
+int FileHelper::fileWriter(const char* filename,const char* data, int datasize, int opt) {
 	if (data == 0 || datasize == 0)
 	{
 		return FALSE;
@@ -116,21 +119,51 @@ int FileHelper::fileWriter(const char* filename,const char* data, int datasize, 
 	HANDLE hf = INVALID_HANDLE_VALUE;
 
 	DWORD dispos = 0;
-	if (append)
+	if (opt == FILE_WRITE_NEW)
 	{
+		dispos = CREATE_ALWAYS ;
+	}
+	else{
 		dispos = OPEN_ALWAYS;
 	}
-	else {
-		dispos = CREATE_ALWAYS;
+
+	int mode = GENERIC_WRITE;
+	if (opt == FILE_WRITE_CHECK)
+	{
+		mode |= GENERIC_READ;
 	}
-	hf = CreateFileA(filename, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, dispos, 0, 0);
+
+	hf = CreateFileA(filename, mode, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, dispos, 0, 0);
 	if (hf == INVALID_HANDLE_VALUE)
 	{
 		return FALSE;
 	}
 
 	DWORD sizehigh = 0;
-	int filesize = GetFileSize(hf, &sizehigh);
+	size_t filesize = GetFileSize(hf, &sizehigh);
+
+	DWORD cnt = 0;
+	if (opt == FILE_WRITE_CHECK)
+	{
+		char* buffer = new char[filesize+256];
+		result = ReadFile(hf, buffer, filesize, &cnt, 0);
+		if (result)
+		{
+			result = binarySearch(buffer, filesize, data, datasize);
+			delete buffer;
+
+			if (result != -1)
+			{	
+				CloseHandle(hf);
+				return TRUE;
+			}
+		}
+		else {
+			CloseHandle(hf);
+			delete buffer;
+			return FALSE;
+		}
+	}
 
 	if (dispos == OPEN_ALWAYS && (filesize > 0 || sizehigh > 0))
 	{
@@ -142,7 +175,7 @@ int FileHelper::fileWriter(const char* filename,const char* data, int datasize, 
 		}
 	}
 
-	DWORD cnt = 0;
+	
 	result = WriteFile(hf, data, datasize, &cnt, 0);
 	CloseHandle(hf);
 	if (result && cnt == datasize)

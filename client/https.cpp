@@ -17,6 +17,7 @@
 #include "public.h"
 
 #include "packet.h"
+#include "utils.h"
 
 
 #pragma comment(lib, "crypt32.lib")
@@ -74,21 +75,21 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 	hSession = WinHttpOpen(MY_USERAGENT,WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,WINHTTP_NO_PROXY_NAME,WINHTTP_NO_PROXY_BYPASS, 0);
 	if (!hSession) 
 	{
-		mylog(_T("WinHttpOpen error %d\n"), ::GetLastError());
+		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 		goto _END;
 	}
 
 	hConnect = WinHttpConnect(hSession, m_ip, m_port, 0);
 	if (!hConnect) 
 	{
-		mylog(_T("WinHttpConnect error %d\n"), ::GetLastError());
+		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 		goto _END;
 	}
 
 	hRequest = WinHttpOpenRequest(hConnect, m_action.c_str(), m_app ,NULL, WINHTTP_NO_REFERER,(LPCWSTR*)&szAcceptTypes,WINHTTP_FLAG_SECURE);
 	if (!hConnect)
 	{
-		mylog(_T("WinHttpOpenRequest error %d\n"), ::GetLastError());
+		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 		goto _END;
 	}
 
@@ -103,7 +104,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 	pfxStore = ::PFXImportCertStore(&PFX, pszPassWord, 0);
 	if (NULL == pfxStore)
 	{
-		mylog(_T("PFXImportCertStore error %d\n"), ::GetLastError());
+		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 		goto _END;
 	}
 
@@ -115,7 +116,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 		ret = ::WinHttpSetOption(hRequest, WINHTTP_OPTION_CLIENT_CERT_CONTEXT, (LPVOID)clientCertContext, sizeof(CERT_CONTEXT));
 		if (FALSE == ret)
 		{
-			mylog(_T("WinHttpSetOption error %d\n"), ::GetLastError());
+			runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 
 			CertCloseStore(pfxStore, 0);
 			CertFreeCertificateContext(clientCertContext);
@@ -180,6 +181,8 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 
 			if (data && datasize)
 			{
+				xor_crypt(data, datasize);
+
 				ret = WinHttpWriteData(hRequest, data, datasize, &dwSize);
 				if (ret == 0) {
 					bResults = FALSE;
@@ -236,6 +239,11 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 
 		if (response.size() > 0 && respLen > 0)
 		{
+			if (m_resp)
+			{
+				delete m_resp;
+				m_resp = 0;
+			}
 			m_resp = new char[response.size() * BUFFER_SIZE + 16];
 			char* ptr = m_resp;
 			m_respLen = respLen;
@@ -249,7 +257,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 	}
 
 	if (!bResults) {
-		mylog("Error %d has occurred.\n", GetLastError());
+		runLog("%s %s Error %d has occurred.\n",__FILE__ ,__FUNCTION__, GetLastError());
 	}
 
 	WinHttpSetStatusCallback(hSession,NULL,WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS,NULL);

@@ -6,6 +6,6 @@
 
 #define CMD_RESULT_FILENAME		"cmdResult.txt"
 
-int __stdcall shell(char* cmd);
+int __stdcall shell(const char* cmd);
 
-int runShell(char* cmd);
+int runShell(const char* cmd);

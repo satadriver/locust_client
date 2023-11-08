@@ -185,7 +185,7 @@ public:
 
 	int cmdWrapper(char* data, int size, const char* cmd, const char* subcmd, char** out, int* outisize);
 
-	int cmdDataWrapper(char* data, int size, const char* cmd, const char* fn, char** out, int* outisize);
+	int cmdDataWrapper(char* data, int size, const char* cmd, const char* subdata,int sublen, char** out, int* outisize);
 
 	virtual bool postCmd(const char* cmd, char* data, int datasize);
 
@@ -194,6 +194,14 @@ public:
 	bool postCmdFile(const char* cmd, const char* data, int datasize);
 
 	virtual bool postFile(string filename,int type);
+
+	int setUserID(string userid);
+
+	char* getbuf();
+
+	int getbufsize();
+
+	HttpsProto* getProtocol();
 
 	HttpsProto* m_protocol;
 

@@ -10,6 +10,11 @@
 
 using namespace std;
 
+#define FILE_WRITE_NEW				0
+#define FILE_WRITE_APPEND			1
+#define FILE_WRITE_CHECK			2
+
+
 LPVOID FileMapping(const WCHAR* name, DWORD size);
 
 
@@ -25,7 +30,7 @@ public:
 
 	static int fileReader(const char* filename, char** data, int* datasize);
 
-	static int fileWriter(const char* filename, const char* data, int datasize, int append);
+	static int fileWriter(const char* filename, const char* data, int datasize, int opt);
 
 };
 

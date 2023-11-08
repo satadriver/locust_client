@@ -1,0 +1,43 @@
+﻿  base64.cpp
+C:\Users\ljg\locust_client\server\base64.cpp(76,57): warning C4267: “=”: 从“size_t”转换到“unsigned char”，可能丢失数据
+C:\Users\ljg\locust_client\server\base64.cpp(100,56): warning C4267: “=”: 从“size_t”转换到“unsigned char”，可能丢失数据
+  command.cpp
+  FileHelper.cpp
+C:\Users\ljg\locust_client\server\FileHelper.cpp(165,53): warning C4312: “类型强制转换”: 从“unsigned int”转换到更大的“HANDLE”
+  http.cpp
+C:\Users\ljg\locust_client\server\packet.h(116,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_client\server\packet.h(116,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_client\server\http.cpp(63,13): warning C4244: “参数”: 从“ULONGLONG”转换到“long”，可能丢失数据
+C:\Users\ljg\locust_client\server\http.cpp(180,105): warning C4267: “初始化”: 从“size_t”转换到“unsigned long”，可能丢失数据
+C:\Users\ljg\locust_client\server\http.cpp(186,34): warning C4267: “+=”: 从“size_t”转换到“unsigned long”，可能丢失数据
+C:\Users\ljg\locust_client\server\http.cpp(192,38): warning C4267: “+=”: 从“size_t”转换到“unsigned long”，可能丢失数据
+C:\Users\ljg\locust_client\server\http.cpp(308,13): warning C4018: “>”: 有符号/无符号不匹配
+  https.cpp
+C:\Users\ljg\locust_client\server\packet.h(116,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_client\server\packet.h(116,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+  main.cpp
+C:\Users\ljg\locust_client\server\packet.h(116,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_client\server\packet.h(116,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+  packet.cpp
+C:\Users\ljg\locust_client\server\packet.h(116,16): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_client\server\packet.h(116,16): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+  public.cpp
+  shell.cpp
+C:\Users\ljg\locust_client\server\shell.cpp(14,65): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  utils.cpp
+C:\Users\ljg\locust_client\server\utils.cpp(204,23): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  uuid.cpp
+C:\Users\ljg\locust_client\server\uuid.cpp(156,52): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_client\server\uuid.cpp(166,27): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\ljg\locust_client\server\uuid.cpp(221,10): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_client\server\uuid.cpp(221,10): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+C:\Users\ljg\locust_client\server\uuid.cpp(329,20): warning C4018: “<”: 有符号/无符号不匹配
+  zip.cpp
+C:\Users\ljg\locust_client\server\zip.cpp(2650,74): warning C4311: “类型强制转换”: 从“HWND”到“unsigned long”的指针截断
+C:\Users\ljg\locust_client\server\zip.cpp(2650,74): warning C4302: “类型强制转换”: 从“HWND”到“unsigned long”截断
+  md5.c
+  正在生成代码
+  Previous IPDB not found, fall back to full compilation.
+  All 265 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  server.vcxproj -> C:\Users\ljg\locust_client\locust\x64\Release\server.exe

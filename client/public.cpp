@@ -14,5 +14,4 @@ int g_uuid_len = 0;
 
 int g_interval = 0;
 
-
 int g_fsize_limit = 0;

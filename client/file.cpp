@@ -274,9 +274,6 @@ int __stdcall getAllFiles()
 
 		iRet = http.postFile(ALLFILES_FILENAME, MISSION_TYPE_FILE);
 
-#ifndef _DEBUG
-		DeleteFileA(strFilePath);
-#endif
 		return TRUE;
 	}
 	catch (...)

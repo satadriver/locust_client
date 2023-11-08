@@ -244,21 +244,30 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
     hSession = WinHttpOpen(MY_USERAGENT, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
     if (!hSession) {
+		runLog("%s %s WinHttpOpen error\r\n", __FILE__, __FUNCTION__);
         sendok = false;
         return sendok;
     }
 
     hConnect = WinHttpConnect(hSession, m_ip, m_port, 0);
     if (!hConnect) {
+		runLog("%s %s WinHttpOpen WinHttpConnect\r\n", __FILE__, __FUNCTION__);
         sendok = false;
         return sendok;
     }
 
     hRequest = WinHttpOpenRequest(hConnect, m_action.c_str(), m_app, 0, WINHTTP_NO_REFERER, NULL, 0);        //WINHTTP_NO_REFERER
     if (!hRequest) {
+		runLog("%s %s WinHttpOpen WinHttpOpenRequest\r\n", __FILE__, __FUNCTION__);
         sendok = false;
         return sendok;
     }
+
+	DWORD dwOption = WINHTTP_DECOMPRESSION_FLAG_ALL;
+	DWORD dwL = sizeof(dwOption);
+	opSuccess = WinHttpSetOption(hRequest, WINHTTP_OPTION_DECOMPRESSION, &dwOption, dwL);
+
+	opSuccess = GetLastError();
 
 //     opSuccess = WinHttpAddRequestHeaders(hRequest, L"Expect:100-continue", -1L, 0);
 //     if (!hRequest) {
@@ -290,6 +299,8 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
     if (data && datasize)
     {
+		xor_crypt(data, datasize);
+
 		opSuccess = WinHttpWriteData(hRequest, data, datasize, &btsWritten);
 		if (!opSuccess) {
 			sendok = false;
@@ -342,6 +353,11 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
 	if (response.size() > 0 && respLen > 0)
 	{
+		if (m_resp)
+		{
+			delete m_resp;
+			m_resp = 0;
+		}
 		m_resp = new char[response.size() * BUFFER_SIZE + 16];
 		char* ptr = m_resp;
 		m_respLen = respLen;

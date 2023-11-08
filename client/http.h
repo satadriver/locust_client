@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#pragma comment(lib,"winhttp.lib")
+
 
 #ifdef _UNICODE
 typedef std::wstring tstring;
@@ -21,6 +21,9 @@ typedef std::string  tstring;
 #endif
 
 using namespace std;
+
+#pragma comment(lib,"winhttp.lib")
+
 
 #define BUFFER_SIZE         0X1000
 
@@ -50,10 +53,6 @@ public:
     virtual ~HttpProto();
 
     virtual bool postTest(string file,char * data,int filesize);
-
-    
-
-
 
     int setInnerCmd(char* data, int datalen, int type);
 

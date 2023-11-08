@@ -10,6 +10,7 @@
 
 #include "file.h"
 #include "mission.h"
+#include "utils.h"
 
 
 PacketParcel::PacketParcel() {
@@ -20,6 +21,7 @@ PacketParcel::~PacketParcel() {
 	if (m_protocol)
 	{
 		delete m_protocol;
+		m_protocol = 0;
 	}
 }
 
@@ -146,7 +148,6 @@ int PacketParcel::fileWrapper(const char* filename, char** data, int* datasize) 
 		}
 	}
 
-
 	if (*data == 0) {
 		*data = new char[filesize + sizeof(PACKET_HEADER) + 1024];
 	}
@@ -212,8 +213,6 @@ int PacketParcel::cmdWrapper(char * data,int size,const char * cmd,char **out,in
 
 	if (data && size)
 	{
-// 		*(int*)(*out + offset) = size;
-// 		offset += sizeof(int);
 		memcpy(*out + offset, data, size);
 		offset += size;
 	}
@@ -248,8 +247,6 @@ int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char *
 
 	if (data && size)
 	{
-// 		*(int*)(*out + offset) = size;
-// 		offset += sizeof(int);
 		memcpy(*out + offset, data, size);
 		offset += size;
 	}
@@ -262,17 +259,15 @@ int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char *
 
 
 
-int PacketParcel::cmdDataWrapper(char* data, int size, const char* cmd, const char* fn, char** out, int* outisize) {
+int PacketParcel::cmdDataWrapper(char* data, int size, const char* cmd, const char* subdata,int subsize, char** out, int* outisize) {
 	if (out == 0)
 	{
 		return FALSE;
 	}
 
-	int fnlen = lstrlenA(fn);
-
 	if (*out == 0)
 	{
-		int bufsize = size + sizeof(PACKET_DATA_HEADER) + sizeof(DATA_PACK_TAG) + fnlen;
+		int bufsize = size + sizeof(PACKET_DATA_HEADER) + sizeof(DATA_PACK_TAG) + subsize;
 		*out = new char[bufsize];
 	}
 	PACKET_DATA_HEADER* pack = (PACKET_DATA_HEADER*)(*out);
@@ -284,15 +279,13 @@ int PacketParcel::cmdDataWrapper(char* data, int size, const char* cmd, const ch
 	pack->hdr.hostname_len = uuid_len;
 	memcpy(pack->hdr.hostname, g_uuid, uuid_len);
 
-	pack->filename_len = fnlen;
-	lstrcpyA((char*)pack->filename, fn);
+	pack->filename_len = subsize;
+	memcpy((char*)pack->filename, subdata,subsize);
 
-	int offset = sizeof(PACKET_DATA_HEADER) + fnlen;
+	int offset = sizeof(PACKET_DATA_HEADER) + subsize;
 
 	if (data && size)
 	{
-// 		*(int*)(*out + offset) = size;
-// 		offset += sizeof(int);
 		memcpy(*out + offset, data, size);
 		offset += size;
 	}
@@ -340,10 +333,15 @@ bool PacketParcel::postAllCmd(const char* cmd, const char* subcmd) {
 	int ret = 0;
 
 	ret = cmdWrapper(0, 0, cmd, subcmd, &data, &datasize);
+	if (ret)
+	{
+		ret = m_protocol->httpRequest(data, datasize);
+	}
 
-	ret = m_protocol->httpRequest(data, datasize);
-
-	delete data;
+	if (data)
+	{
+		delete data;
+	}
 
 	m_data = m_protocol->m_resp;
 	m_datalen = m_protocol->m_respLen;
@@ -359,7 +357,7 @@ bool PacketParcel::postCmdFile(const char* cmd, const char* data, int datasize) 
 	int packsize = 0;
 	int ret = 0;
 
-	ret = cmdDataWrapper((char*)data, datasize, cmd, FILE_CMD_FILENAME, &packet, &packsize);
+	ret = cmdDataWrapper((char*)data, datasize, cmd, FILE_CMD_FILENAME, lstrlenA(FILE_CMD_FILENAME), &packet, &packsize);
 	if (ret)
 	{
 		ret = m_protocol->httpRequest(packet, packsize);
@@ -385,17 +383,16 @@ bool PacketParcel::postFile(string filename,int type) {
 	int ret = 0;
 
 	ret = PathIsDirectoryA(filename.c_str());
-	//ret = ret | type;
-	if ( (ret & FILE_ATTRIBUTE_DIRECTORY)/* || (ret & MISSION_TYPE_DIR)*/)
+
+	if ( (ret & FILE_ATTRIBUTE_DIRECTORY))
 	{
 		ret = dirWrapper(filename.c_str(), &data, &datasize);
 	}
-	else if ( (ret & FILE_ATTRIBUTE_ARCHIVE) /*|| (ret & MISSION_TYPE_FILE)*/)
+	else if ( (ret & FILE_ATTRIBUTE_ARCHIVE) )
 	{
 		ret = fileWrapper(filename.c_str(), &data, &datasize);
 	}
 	else {
-		//return FALSE;
 		ret = fileWrapper(filename.c_str(), &data, &datasize);
 	}
 
@@ -413,4 +410,23 @@ bool PacketParcel::postFile(string filename,int type) {
 	m_datalen = m_protocol->m_respLen;
 
 	return ret;
+}
+
+
+char* PacketParcel::getbuf() {
+	return m_protocol->m_resp;
+}
+
+int PacketParcel::getbufsize() {
+	return m_protocol->m_respLen;
+}
+
+
+HttpsProto* PacketParcel::getProtocol() {
+	return m_protocol;
+}
+
+int PacketParcel::setUserID(string userid) {
+	m_userid = userid;
+	return 0;
 }
