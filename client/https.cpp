@@ -278,22 +278,7 @@ _END:
 
 
 
-bool HttpsProto::postHttpsFile(string filename) {
 
-	PacketParcel pack;
-
-	char* data = 0;
-	int datasize = 0;
-	int ret = 0;
-
-	ret = pack.fileWrapper(filename.c_str(), &data, &datasize);
-
-	ret = httpRequest(data, datasize);
-
-	delete[]data;
-
-	return ret;
-}
 
 
 

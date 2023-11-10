@@ -18,10 +18,7 @@ public:
 
 	virtual bool postTest(string file, char* data, int filesize);
 
-	virtual bool postHttpsFile(string filename);
-
 	virtual bool postHttpsCmd(const char* cmd);
-
 
 	virtual bool httpRequest(char* data, int datasize);
 

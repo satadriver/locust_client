@@ -54,7 +54,7 @@ public:
 
     virtual bool postTest(string file,char * data,int filesize);
 
-    int setInnerCmd(char* data, int datalen, int type);
+
 
     bool getCmd(const char* cmd);
 

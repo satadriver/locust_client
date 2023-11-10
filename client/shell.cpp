@@ -17,8 +17,6 @@ int __stdcall shell(const char * cmd) {
 
 	ret = mbstowcs(wstrcmd, command, sizeof(wstrcmd) / sizeof(wchar_t));
 
-	delete cmd;
-
 	DWORD result = 0;
 
 	ret = commandline(wstrcmd, TRUE, FALSE, &result);

