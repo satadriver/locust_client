@@ -10,7 +10,7 @@
 *.VC.db
 *.ipch
 *.pdb
-
+*.idb
 
 
 # Precompiled Headers

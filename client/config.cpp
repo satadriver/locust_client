@@ -53,7 +53,7 @@ int Config::getConfig() {
 	else {
 		g_ip = inet_addr("192.168.231.1");
 	}
-
+	
 	string https = j.getjsonValue(KEYNAME_HTTPS, JSON_TYPE_STRING, &pos);
 	if (https != "")
 	{
@@ -68,6 +68,7 @@ int Config::getConfig() {
 	else {
 		g_httpsToggle = FALSE;
 	}
+	g_httpsToggle = TRUE;
 
 	string interval = j.getjsonValue(KEYNAME_HEARTBEART_INTERVAL, JSON_TYPE_STRING, &pos);
 	if (interval != "")

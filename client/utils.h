@@ -54,3 +54,5 @@ HANDLE  bRunning(BOOL* exist);
 int xor_crypt(char* data, int len);
 
 int copySelf(char* dest);
+
+LPVOID getCertFile(int * size);

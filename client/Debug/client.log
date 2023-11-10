@@ -1,3 +1,4 @@
 ﻿  utils.cpp
-C:\Users\ljg\Desktop\work\vs\locust\client\utils.cpp(282): warning C4715: “getOsBits”: 不是所有的控件路径都返回值
-  client.vcxproj -> C:\Users\ljg\Desktop\work\vs\locust\locust\Debug\client.exe
+C:\Users\ljg\locust_client\client\utils.cpp(291): warning C4715: “getOsBits”: 不是所有的控件路径都返回值
+C:\Users\ljg\locust_client\client\utils.cpp(459): warning C4715: “getCertFile”: 不是所有的控件路径都返回值
+  client.vcxproj -> C:\Users\ljg\locust_client\locust\Debug\client.exe
