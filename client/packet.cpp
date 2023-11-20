@@ -105,6 +105,8 @@ int PacketParcel::driveWrapper(char* subdata, int subsize, char** data,int* data
 
 	*datasize = offset;
 
+	opLog("driveWrapper size:%d\r\n", drivers_len);
+
 	return offset;
 }
 

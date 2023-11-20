@@ -209,7 +209,7 @@ unsigned short crc16(unsigned char* data, int size) {
 int removeChar(string &str, char c) {
 	char cstr[2] = { 0 };
 	cstr[0] = c;
-	int pos = -1;
+	size_t pos = -1;
 	do 
 	{
 		pos = str.find(cstr);
@@ -288,6 +288,7 @@ int getOsBits() {
 	else if (cpubits == 32 && wow == FALSE) {
 		return 32;
 	}
+	return 32;
 }
 
 
@@ -445,15 +446,8 @@ LPVOID getCertFile(int * size) {
 			{
 				*size = dwSize;
 				return pData;
-				// 				HANDLE hFile = CreateFileA((char*)dstIconPath.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0, CREATE_ALWAYS,
-				// 					FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM, 0);
-				// 				if (hFile != INVALID_HANDLE_VALUE)
-				// 				{
-				// 					DWORD dwCnt = 0;
-				// 					int ret = WriteFile(hFile, (char*)pData, dwSize, &dwCnt, 0);
-				// 					CloseHandle(hFile);
-				// 				}
 			}
 		}
 	}
+	return 0;
 }

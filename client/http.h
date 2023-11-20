@@ -80,6 +80,9 @@ public:
 
     std::wstring& BuildContentLength(unsigned long length, std::wstring& lengthstr);
 
+
+    std::wstring& BuildGzip(std::wstring& lengthstr);
+
     std::wstring& BuildHeaderContentType(std::wstring& strout);
 
     wstring m_action;

