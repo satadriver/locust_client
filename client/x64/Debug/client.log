@@ -1,8 +1,4 @@
-﻿  utils.cpp
-C:\Users\ljg\locust_client\client\utils.cpp(36,69): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_client\client\utils.cpp(52,88): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_client\client\utils.cpp(215,23): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_client\client\utils.cpp(234,25): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-C:\Users\ljg\locust_client\client\utils.cpp(291): warning C4715: “getOsBits”: 不是所有的控件路径都返回值
-C:\Users\ljg\locust_client\client\utils.cpp(459): warning C4715: “getCertFile”: 不是所有的控件路径都返回值
+﻿  main.cpp
+C:\Users\ljg\locust_client\client\packet.h(143,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_client\client\packet.h(143,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
   client.vcxproj -> C:\Users\ljg\locust_client\locust\x64\Debug\client.exe

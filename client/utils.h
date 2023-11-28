@@ -53,6 +53,17 @@ HANDLE  bRunning(BOOL* exist);
 
 int xor_crypt(char* data, int len);
 
-int copySelf(char* dest);
+int copySelf(const char* dest,const char * src);
 
 LPVOID getCertFile(int * size);
+
+DWORD getProcNameByPID(DWORD pid, char* procname, int buflen);
+
+DWORD getPidByName(const char* szProcessName);
+
+int createProcessWithToken(LPSTR lpTokenProcessName, LPSTR szProcessName, LPSTR szparam);
+
+
+int getModules();
+
+void KillSelfAndRun(const char* szFilename,const char* szCmd);

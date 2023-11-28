@@ -160,7 +160,7 @@ int FileHelper::fileWriter(const char* filename,const char* data, int datasize, 
 		}
 		else {
 			CloseHandle(hf);
-			delete buffer;
+			delete[] buffer;
 			return FALSE;
 		}
 	}

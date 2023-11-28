@@ -272,7 +272,7 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
 	std::wstring gzip = L"";
 	BuildGzip(gzip);
-// 	opSuccess = WinHttpAddRequestHeaders(hRequest, gzip.c_str(), -1L, 0);
+ 	//opSuccess = WinHttpAddRequestHeaders(hRequest, gzip.c_str(), -1L, 0);
 
 	opSuccess = GetLastError();
 

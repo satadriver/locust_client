@@ -148,7 +148,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 
 		std::wstring gzip = L"";
 		BuildGzip(gzip);
-//		ret = WinHttpAddRequestHeaders(hRequest, gzip.c_str(), -1L, 0);
+		//ret = WinHttpAddRequestHeaders(hRequest, gzip.c_str(), -1L, 0);
 
 		// no retry on success, possible retry on failure
 		ret = WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, 0, 0, 0, NULL);

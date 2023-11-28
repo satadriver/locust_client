@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\ljg\Desktop\work\vs\locust\locust\Debug\server.exe</FullPath>
+      <FullPath>C:\Users\ljg\locust_client\locust\Debug\server.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

