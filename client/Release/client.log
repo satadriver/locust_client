@@ -1,12 +1,5 @@
-﻿cl : 命令行 warning D9025: 正在重写“/analyze-”(用“/analyze:stacksize65536”)
-  main.cpp
-C:\Users\ljg\locust_client\client\packet.h(143,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\locust_client\client\packet.h(143,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\locust_client\client\main.cpp(448,23): error C2440: “=”: 无法从“char *”转换为“int”
-C:\Users\ljg\locust_client\client\main.cpp(448,16): message : 没有使该转换得以执行的上下文
-  vm.cpp
-C:\Users\ljg\locust_client\client\vm.cpp(53,8): error C2374: “file”: 重定义；多次初始化
-C:\Users\ljg\locust_client\client\vm.cpp(35): message : 参见“file”的声明
-C:\Users\ljg\locust_client\client\vm.cpp(54,6): error C2374: “filesize”: 重定义；多次初始化
-C:\Users\ljg\locust_client\client\vm.cpp(36): message : 参见“filesize”的声明
-  正在运行 C/C++ 代码分析...
+﻿  正在生成代码
+  Previous IPDB and IOBJ mismatch, fall back to full compilation.
+  All 386 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  client.vcxproj -> C:\Users\ljg\locust_client\locust\Release\client.exe

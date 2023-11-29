@@ -224,7 +224,7 @@ DWORD setKeyValueDword(HKEY hMainKey, char* szSubKey, char* szKeyName, DWORD dwK
 
 
 //need admin priority to modify reg of local_machine
-int setRegBootRun(HKEY hMainKey, char* strPEResidence)
+int setRegBootRun(HKEY hMainKey, char* strResidence)
 {
 	//'Software\Microsoft\Windows\CurrentVersion\RunServicesOnce',0
 	//'Software\Microsoft\Windows\CurrentVersion\RunServices',0
@@ -269,7 +269,7 @@ int setRegBootRun(HKEY hMainKey, char* strPEResidence)
 	unsigned long iType = REG_BINARY | REG_DWORD | REG_EXPAND_SZ | REG_MULTI_SZ | REG_NONE | REG_SZ;
 	//if value is 234 ,it means out buffer is limit
 	iRes = RegQueryValueExA(hKey, key, 0, &iType, value, &valuelen);
-	if (iRes == ERROR_SUCCESS && lstrcmpiA((char*)value, strPEResidence) == 0)
+	if (iRes == ERROR_SUCCESS && lstrcmpiA((char*)value, strResidence) == 0)
 	{
 		RegCloseKey(hKey);
 		return TRUE;
@@ -279,7 +279,7 @@ int setRegBootRun(HKEY hMainKey, char* strPEResidence)
 		iRes = GetLastError();
 		//2 is not exist
 
-		iRes = RegSetValueExA(hKey, key, 0, REG_SZ, (unsigned char*)strPEResidence, lstrlenA(strPEResidence));
+		iRes = RegSetValueExA(hKey, key, 0, REG_SZ, (unsigned char*)strResidence, lstrlenA(strResidence));
 		//RegFlushKey(hKey);
 		RegCloseKey(hKey);
 		if (iRes != ERROR_SUCCESS)

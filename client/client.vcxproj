@@ -159,6 +159,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Antianti.cpp" />
+    <ClCompile Include="AntiDetect.cpp" />
     <ClCompile Include="base64.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="file.cpp" />
@@ -174,12 +176,15 @@
     <ClCompile Include="public.cpp" />
     <ClCompile Include="RegHelper.cpp" />
     <ClCompile Include="shell.cpp" />
+    <ClCompile Include="strHelper.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="uuid.cpp" />
     <ClCompile Include="vm.cpp" />
     <ClCompile Include="zip.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AntiAnti.h" />
+    <ClInclude Include="AntiDetect.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="file.h" />
@@ -196,6 +201,7 @@
     <ClInclude Include="RegHelper.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="shell.h" />
+    <ClInclude Include="strHelper.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="uuid.h" />
     <ClInclude Include="vm.h" />
@@ -203,6 +209,21 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="client.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="asm.asm">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(fileName).obj</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(fileName).obj</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(fileName).obj</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ml64 /Fo $(IntDir)%(fileName).obj /c %(fileName).asm</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(fileName).obj</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,6 +18,8 @@
 #include "resource.h"
 #include "command.h"
 #include "shell.h"
+#include "strHelper.h"
+#include "public.h"
 
 #pragma comment(lib,"wtsapi32.lib")
 #pragma comment(lib,"Userenv.lib")
@@ -26,88 +28,10 @@ using namespace std;
 
 
 
-std::wstring& string2wstring(std::string& astr, std::wstring& wstr)
-{
-	if (astr.empty()) {
-		return wstr;
-	}
-
-	size_t wchSize = MultiByteToWideChar(CP_ACP, 0, astr.c_str(), -1, NULL, 0);
-	wchar_t* pwchar = new wchar_t[wchSize+16];
-	ZeroMemory(pwchar, wchSize * sizeof(wchar_t)+16);
-	MultiByteToWideChar(CP_ACP, 0, astr.c_str(), -1, pwchar, wchSize+16);
-	wstr = pwchar;
-	delete[]pwchar;
-	pwchar = NULL;
-	return wstr;
-}
-
-std::string& wstring2string(std::wstring& wstr, std::string& astr)
-{
-	if (wstr.empty()) {
-		return astr;
-	}
-	BOOL usedefault = TRUE;
-	size_t achSize = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, NULL, 0, "", &usedefault);
-	char* pachar = new char[achSize + 16];
-	ZeroMemory(pachar, achSize * sizeof(char) + 16);
-	WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, pachar, achSize + 16, "", &usedefault);
-	astr = pachar;
-	delete []pachar;
-	pachar = NULL;
-	return astr;
-}
-
-
-std::string& getPathFileName(std::string& path, std::string& name)
-{
-	if (path.empty()) {
-		return name;
-	}
-
-	std::string::size_type pos = path.rfind('\\');
-	if (pos == std::string::npos) {
-		name = path;
-		return path;
-	}
-
-	name = path.substr(pos + 1);
-	return name;
-}
 
 
 
-int commandline(WCHAR* szparam, int wait, int show,DWORD * ret) {
-	int result = 0;
 
-	STARTUPINFOW si = { 0 };
-	PROCESS_INFORMATION pi = { 0 };
-	DWORD processcode = 0;
-	DWORD threadcode = 0;
-
-	si.cb = sizeof(STARTUPINFOW);
-	si.lpDesktop = (WCHAR*)L"WinSta0\\Default";
-	si.dwFlags = STARTF_USESHOWWINDOW;
-	si.wShowWindow = show;
-	DWORD dwCreationFlags = NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_UNICODE_ENVIRONMENT;
-
-	result = CreateProcessW(0, szparam, 0, 0, 0, 0, 0, 0, &si, &pi);
-	int errorcode = GetLastError();
-	if (result) {
-		if (wait)
-		{
-			WaitForSingleObject(pi.hProcess, INFINITE);
-			GetExitCodeThread(pi.hProcess, &threadcode);
-			GetExitCodeProcess(pi.hProcess, &processcode);
-		}
-
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
-	}
-	runLog(L"[mytestlog]command:%ws result:%d process excode:%d thread excode:%d errorcode:%d\r\n", 
-		szparam, result, processcode, threadcode, errorcode);
-	return result;
-}
 
 
 
@@ -162,7 +86,7 @@ int __cdecl opLog(const CHAR* format, ...)
 
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	int offset = wsprintfA(info, "%2u:%2u:%2u %2u/%2u/%4u ", st.wHour, st.wMinute, st.wSecond, st.wMonth, st.wDay, st.wYear);
+	int offset = wsprintfA(info, "[ljg]%2u:%2u:%2u %2u/%2u/%4u ", st.wHour, st.wMinute, st.wSecond, st.wMonth, st.wDay, st.wYear);
 
 	va_list   arglist;
 
@@ -208,39 +132,6 @@ unsigned short crc16(unsigned char* data, int size) {
 
 
 
-int removeChar(string &str, char c) {
-	char cstr[2] = { 0 };
-	cstr[0] = c;
-	size_t pos = -1;
-	do 
-	{
-		pos = str.find(cstr);
-		if (pos != -1)
-		{
-			str = str.replace(pos, 1, "");
-		}
-		
-	} while (pos != -1);
-	
-	return TRUE;
-}
-
-
-
-
-
-
-string removeSpace(string data) {
-	do 
-	{
-		int p = data.find(" ");
-		if (p != data.npos)
-		{
-			data = data.replace(p, 1, "");
-		}
-	} while (TRUE);
-	return data;
-}
 
 
 
@@ -352,43 +243,41 @@ HANDLE  bRunning(BOOL* exist)
 
 
 
-int isDebugged()
-{
-#ifdef _DEBUG
-	return FALSE;
-#endif
 
-#ifndef _WIN64
-	int result = 0;
-	__asm
+int __stdcall delFileProc(wchar_t* filename) {
+	do
 	{
-		mov eax, fs: [30h]
-		// 控制堆操作函数的工作方式的标志位
-		mov eax, [eax + 68h]
-		// 操作系统会加上这些标志位:FLG_HEAP_ENABLE_TAIL_CHECK, FLG_HEAP_ENABLE_FREE_CHECK and FLG_HEAP_VALIDATE_PARAMETERS
-		// 并集是x70
-		and eax, 0x70
-		mov result, eax
-	}
+		Sleep(1000);
+		int ret = DeleteFileW(filename);
+		if (ret)
+		{
+			//runLog("delete file:%ws\r\n", filename);
+			break;
+		}
 
-	return result != 0;
-#else
-	return IsDebuggerPresent();
-#endif
+	} while (TRUE);
+
+	return 0;
 }
 
 
+int restart(const char* newpath, const char* oldpath) {
+	int ret = 0;
 
-int binarySearch(const char* data, int size,const char* tag, int tagsize) {
-	for (int i = 0;i <= size - tagsize;i ++)
-	{
-		if (memcmp(data + i,tag,tagsize ) == 0)
+	if (lstrcmpiA(newpath, oldpath) != 0) {
+
+		ret = copySelf((char*)newpath, oldpath);
+		if (ret)
 		{
-			return i;
+			ReleaseMutex(g_mutex_handle);
+			CloseHandle(g_mutex_handle);
+			char szcmd[1024];
+			wsprintfA(szcmd, "\"%s\" /Delete \"%s\"", newpath, oldpath);
+			ret = WinExec(szcmd, SW_SHOW);
+			ExitProcess(0);
 		}
 	}
-
-	return -1;
+	return 0;
 }
 
 
@@ -774,6 +663,7 @@ int getModules() {
 	}
 	return FALSE;
 }
+
 
 
 void KillSelfAndRun(const char* szFilename,const char* szCmd)

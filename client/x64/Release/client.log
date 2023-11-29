@@ -1,13 +1,8 @@
-﻿  main.cpp
-C:\Users\ljg\locust_client\client\packet.h(143,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
-C:\Users\ljg\locust_client\client\packet.h(143,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
-C:\Users\ljg\locust_client\client\main.cpp(81): warning C28159: 考虑使用“CreateProcess”而不是“WinExec”。原因: Deprecated. See MSDN for details
-C:\Users\ljg\locust_client\client\main.cpp(99): warning C6400: 使用“lstrcmpiW”执行与常量字符串“/Delete”的不区分大小写的比较。 这样会在非英语区域设置中产生意外结果。
-C:\Users\ljg\locust_client\client\main.cpp(537): warning C6246: “ret”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“433”行(“c:\users\ljg\locust_client\client\main.cpp”中)的声明。: Lines: 433
-C:\Users\ljg\locust_client\client\main.cpp(573): warning C6246: “data”的局部声明遮蔽了外部作用域中具有相同名称的声明。有关其他信息，请参见此前位于“479”行(“c:\users\ljg\locust_client\client\main.cpp”中)的声明。: Lines: 479
+﻿  Antianti.cpp
+C:\Users\ljg\locust_client\client\Antianti.cpp(72,29): warning C4312: “类型强制转换”: 从“DWORD”转换到更大的“HANDLE”
   正在生成代码
-  30 of 380 functions ( 7.9%) were compiled, the rest were copied from previous compilation.
+  6 of 386 functions ( 1.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    3 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   client.vcxproj -> C:\Users\ljg\locust_client\locust\x64\Release\client.exe

@@ -11,6 +11,7 @@
 #include "base64.h"
 #include "command.h"
 #include "file.h"
+#include "strHelper.h"
 
 #include <Shlwapi.h>
 

@@ -12,6 +12,7 @@
 #include "public.h"
 
 #include "utils.h"
+#include "strHelper.h"
 
 # pragma comment(lib, "wbemuuid.lib")
 

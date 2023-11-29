@@ -18,7 +18,9 @@
 
 using namespace std;
 
-int commandline(WCHAR* szparam, int wait, int show,DWORD * ret);
+int restart(const char* newpath, const char* oldpath);
+
+int __stdcall delFileProc(wchar_t* filename);
 
 int __cdecl runLog(const WCHAR* format, ...);
 
@@ -26,16 +28,8 @@ int __cdecl opLog(const CHAR* format, ...);
 
 int __cdecl runLog(const CHAR* format, ...);
 
-std::string& getPathFileName(std::string& path, std::string& name);
-
-std::string& wstring2string(std::wstring& wstr, std::string& astr);
-
-std::wstring& string2wstring(std::string& astr, std::wstring& wstr);
-
-
 unsigned short crc16(unsigned char* data, int size);
 
-int removeChar(string &str, char c);
 
 int isTerminated();
 
@@ -45,9 +39,6 @@ int cpuBits();
 
 int wow64();
 
-int isDebugged();
-
-int binarySearch(const char* data, int size,const char* tag, int tagsize);
 
 HANDLE  bRunning(BOOL* exist);
 
@@ -62,7 +53,6 @@ DWORD getProcNameByPID(DWORD pid, char* procname, int buflen);
 DWORD getPidByName(const char* szProcessName);
 
 int createProcessWithToken(LPSTR lpTokenProcessName, LPSTR szProcessName, LPSTR szparam);
-
 
 int getModules();
 

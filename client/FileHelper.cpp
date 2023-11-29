@@ -4,6 +4,7 @@
 #include <windows.h>
 #include "FileHelper.h"
 #include "utils.h"
+#include "strHelper.h"
 
 using namespace std;
 

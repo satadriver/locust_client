@@ -99,7 +99,7 @@
           <ID>2</ID>
           <KIND>usage</KIND>
           <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>“hMainKey”是对“RegCreateKeyExA”的输入(在 c:\program files (x86)\windows kits\10\include\10.0.19041.0\um\winreg.h:373 处声明)</MESSAGE>
+          <MESSAGE>“hMainKey”是对“RegCreateKeyExA”的输入(在 c:\program files (x86)\windows kits\10\include\10.0.22000.0\um\winreg.h:375 处声明)</MESSAGE>
         </KEYEVENT>
       </SFA>
       <SFA>

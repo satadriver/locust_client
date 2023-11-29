@@ -4,6 +4,8 @@
 
 #include "utils.h"
 #include "FileHelper.h"
+#include "AntiAnti.h"
+#include "strHelper.h"
 
 MyJson::MyJson() {
 

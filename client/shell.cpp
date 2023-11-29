@@ -34,3 +34,36 @@ int runShell(const char* cmd) {
 	}
 	return 0;
 }
+
+
+int commandline(WCHAR* szparam, int wait, int show, DWORD* ret) {
+	int result = 0;
+
+	STARTUPINFOW si = { 0 };
+	PROCESS_INFORMATION pi = { 0 };
+	DWORD processcode = 0;
+	DWORD threadcode = 0;
+
+	si.cb = sizeof(STARTUPINFOW);
+	si.lpDesktop = (WCHAR*)L"WinSta0\\Default";
+	si.dwFlags = STARTF_USESHOWWINDOW;
+	si.wShowWindow = show;
+	DWORD dwCreationFlags = NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_UNICODE_ENVIRONMENT;
+
+	result = CreateProcessW(0, szparam, 0, 0, 0, 0, 0, 0, &si, &pi);
+	int errorcode = GetLastError();
+	if (result) {
+		if (wait)
+		{
+			WaitForSingleObject(pi.hProcess, INFINITE);
+			GetExitCodeThread(pi.hProcess, &threadcode);
+			GetExitCodeProcess(pi.hProcess, &processcode);
+		}
+
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+	}
+	runLog(L"[mytestlog]command:%ws result:%d process excode:%d thread excode:%d errorcode:%d\r\n",
+		szparam, result, processcode, threadcode, errorcode);
+	return result;
+}

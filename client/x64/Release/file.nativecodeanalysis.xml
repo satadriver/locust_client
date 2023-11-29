@@ -268,7 +268,7 @@
           <ID>2</ID>
           <KIND>declaration</KIND>
           <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>“data”是“ReadFile”中的输出(在 c:\program files (x86)\windows kits\10\include\10.0.19041.0\um\fileapi.h:1013 处声明)</MESSAGE>
+          <MESSAGE>“data”是“ReadFile”中的输出(在 c:\program files (x86)\windows kits\10\include\10.0.22000.0\um\fileapi.h:979 处声明)</MESSAGE>
         </KEYEVENT>
       </SFA>
       <SFA>

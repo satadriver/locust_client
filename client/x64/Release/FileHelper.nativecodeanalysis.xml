@@ -4,25 +4,25 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>FileHelper.cpp</FILENAME>
-      <LINE>153</LINE>
+      <LINE>154</LINE>
       <COLUMN>10</COLUMN>
     </SFA>
     <DEFECTCODE>6283</DEFECTCODE>
     <DESCRIPTION>“buffer”使用数组 new [] 分配，但使用标量 delete 删除。</DESCRIPTION>
     <FUNCTION>FileHelper::fileWriter</FUNCTION>
     <DECORATED>?fileWriter@FileHelper@@SAHPEBD0HH@Z</DECORATED>
-    <FUNCLINE>113</FUNCLINE>
+    <FUNCLINE>114</FUNCLINE>
     <PATH>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>FileHelper.cpp</FILENAME>
-        <LINE>148</LINE>
+        <LINE>149</LINE>
         <COLUMN>17</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>FileHelper.cpp</FILENAME>
-        <LINE>153</LINE>
+        <LINE>154</LINE>
         <COLUMN>10</COLUMN>
       </SFA>
     </PATH>

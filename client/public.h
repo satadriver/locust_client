@@ -23,3 +23,5 @@ extern "C" int g_uuid_len;
 extern int g_interval;
 
 extern int g_fsize_limit;
+
+extern HANDLE g_mutex_handle ;
