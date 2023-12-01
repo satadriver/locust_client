@@ -11,7 +11,7 @@
 #include "file.h"
 #include "mission.h"
 #include "utils.h"
-
+#include "api.h"
 
 PacketParcel::PacketParcel() {
 
@@ -105,7 +105,7 @@ int PacketParcel::driveWrapper(char* subdata, int subsize, char** data,int* data
 
 	*datasize = offset;
 
-	opLog("driveWrapper size:%d\r\n", drivers_len);
+	runLog("driveWrapper size:%d\r\n", drivers_len);
 
 	return offset;
 }
@@ -224,7 +224,7 @@ int PacketParcel::fileWrapper(const char* filename, char * subdata,int subsize,c
 	if (b_file_data)
 	{
 		DWORD cnt = 0;
-		ret = ReadFile(hf, *data + offset, filesize, &cnt, 0);
+		ret = lpReadFile(hf, *data + offset, filesize, &cnt, 0);
 		if (ret == 0)
 		{
 

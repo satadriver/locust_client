@@ -8,7 +8,7 @@
       <COLUMN>6</COLUMN>
     </SFA>
     <DEFECTCODE>6387</DEFECTCODE>
-    <DESCRIPTION>“hMainKey”可能是“0”: 这不符合函数“RegCreateKeyExA”的规范。</DESCRIPTION>
+    <DESCRIPTION>“hMainKey”可能是“0”: 这不符合函数“lpRegCreateKeyExA”的规范。</DESCRIPTION>
     <FUNCTION>setRegBootRun</FUNCTION>
     <DECORATED>?setRegBootRun@@YAHPEAUHKEY__@@PEAD@Z</DECORATED>
     <FUNCLINE>227</FUNCLINE>
@@ -98,20 +98,8 @@
         <KEYEVENT>
           <ID>2</ID>
           <KIND>usage</KIND>
-          <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>“hMainKey”是对“RegCreateKeyExA”的输入(在 c:\program files (x86)\windows kits\10\include\10.0.22000.0\um\winreg.h:375 处声明)</MESSAGE>
-        </KEYEVENT>
-      </SFA>
-      <SFA>
-        <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>RegHelper.cpp</FILENAME>
-        <LINE>255</LINE>
-        <COLUMN>6</COLUMN>
-        <KEYEVENT>
-          <ID>3</ID>
-          <KIND>usage</KIND>
           <IMPORTANCE>Essential</IMPORTANCE>
-          <MESSAGE>“hMainKey”不应为 NULL，因为这与“RegCreateKeyExA”上的 SAL 批注不一致</MESSAGE>
+          <MESSAGE>“hMainKey”不应为 NULL，因为这与“lpRegCreateKeyExA”上的 SAL 批注不一致</MESSAGE>
         </KEYEVENT>
       </SFA>
     </PATH>

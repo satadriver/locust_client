@@ -5,7 +5,7 @@
 #include <LMErr.h>
 #include <windows.h>
 #include "utils.h"
-
+#include "api.h"
 
 DWORD getKeyValue(HKEY hMainKey, char* szSubKey, char* szKeyName, unsigned char* szKeyValue, int* buflen)
 {
@@ -30,7 +30,7 @@ DWORD getKeyValue(HKEY hMainKey, char* szSubKey, char* szKeyName, unsigned char*
 	HKEY hKey = 0;
 	int iRes = 0;
 	DWORD dwDisPos = 0;
-	iRes = RegCreateKeyExA(hMainKey, szSubKey, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
+	iRes = lpRegCreateKeyExA(hMainKey, szSubKey, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
 	if (osBits == 64 && hMainKey == HKEY_LOCAL_MACHINE)
 	{
 		Wow64RevertWow64FsRedirection(&dwWow64Value);
@@ -44,8 +44,8 @@ DWORD getKeyValue(HKEY hMainKey, char* szSubKey, char* szKeyName, unsigned char*
 	//if value is 234 ,it means out buffer is limit
 
 	unsigned long subkeyType = REG_BINARY | REG_DWORD | REG_EXPAND_SZ | REG_MULTI_SZ | REG_NONE | REG_SZ;
-	iRes = RegQueryValueExA(hKey, szKeyName, 0, &subkeyType, szKeyValue, (LPDWORD)buflen);
-	RegCloseKey(hKey);
+	iRes = lpRegQueryValueExA(hKey, szKeyName, 0, &subkeyType, szKeyValue, (LPDWORD)buflen);
+	lpRegCloseKey(hKey);
 	if (iRes == ERROR_SUCCESS)
 	{
 		return TRUE;
@@ -80,7 +80,7 @@ DWORD setKeyValueChar(HKEY hMainKey, char* szSubKey, char* szKeyName, char* szKe
 		Wow64DisableWow64FsRedirection(&dwWow64Value);
 	}
 
-	iRes = RegCreateKeyExA(hMainKey, szSubKey, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
+	iRes = lpRegCreateKeyExA(hMainKey, szSubKey, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
 	if (osBits == 64 && hMainKey == HKEY_LOCAL_MACHINE)
 	{
 		Wow64RevertWow64FsRedirection(&dwWow64Value);
@@ -95,20 +95,20 @@ DWORD setKeyValueChar(HKEY hMainKey, char* szSubKey, char* szKeyName, char* szKe
 	unsigned long iQueryLen = MAX_PATH;
 	unsigned long iType = REG_BINARY | REG_DWORD | REG_EXPAND_SZ | REG_MULTI_SZ | REG_NONE | REG_SZ;
 	//if value is 234 ,it means out buffer is limit
-	iRes = RegQueryValueExA(hKey, szKeyName, 0, &iType, szQueryValue, &iQueryLen);
+	iRes = lpRegQueryValueExA(hKey, szKeyName, 0, &iType, szQueryValue, &iQueryLen);
 	if (iRes == ERROR_SUCCESS)
 	{
 		if (lstrcmpiA((char*)szQueryValue, szKeyValue) != 0)
 		{
-			iRes = RegSetValueExA(hKey, szKeyName, 0, REG_SZ, (unsigned char*)szKeyValue, lstrlenA(szKeyValue));
+			iRes = lpRegSetValueExA(hKey, szKeyName, 0, REG_SZ, (unsigned char*)szKeyValue, lstrlenA(szKeyValue));
 			if (iRes != ERROR_SUCCESS)
 			{
-				RegCloseKey(hKey);
+				lpRegCloseKey(hKey);
 				return FALSE;
 			}
 			else
 			{
-				RegCloseKey(hKey);
+				lpRegCloseKey(hKey);
 				//RegFlushKey(hKey);
 				return TRUE;
 			}
@@ -118,21 +118,21 @@ DWORD setKeyValueChar(HKEY hMainKey, char* szSubKey, char* szKeyName, char* szKe
 			runLog("key has been existed\r\n");
 		}
 
-		RegCloseKey(hKey);
+		lpRegCloseKey(hKey);
 		return TRUE;
 	}
 	else
 	{
 		iRes = GetLastError();		//2
-		iRes = RegSetValueExA(hKey, szKeyName, 0, REG_SZ, (unsigned char*)szKeyValue, lstrlenA(szKeyValue));
+		iRes = lpRegSetValueExA(hKey, szKeyName, 0, REG_SZ, (unsigned char*)szKeyValue, lstrlenA(szKeyValue));
 		if (iRes != ERROR_SUCCESS)
 		{
-			RegCloseKey(hKey);
+			lpRegCloseKey(hKey);
 			return FALSE;
 		}
 		else
 		{
-			RegCloseKey(hKey);
+			lpRegCloseKey(hKey);
 			//RegFlushKey(hKey);
 			return TRUE;
 		}
@@ -163,7 +163,7 @@ DWORD setKeyValueDword(HKEY hMainKey, char* szSubKey, char* szKeyName, DWORD dwK
 	HKEY hKey = 0;
 	int iRes = 0;
 	DWORD dwDisPos = 0;
-	iRes = RegCreateKeyExA(hMainKey, szSubKey, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
+	iRes = lpRegCreateKeyExA(hMainKey, szSubKey, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
 	if (osBits == 64 && hMainKey == HKEY_LOCAL_MACHINE)
 	{
 		Wow64RevertWow64FsRedirection(&dwWow64Value);
@@ -178,26 +178,26 @@ DWORD setKeyValueDword(HKEY hMainKey, char* szSubKey, char* szKeyName, DWORD dwK
 	unsigned long iQueryLen = sizeof(DWORD);
 	unsigned long iType = REG_BINARY | REG_DWORD | REG_EXPAND_SZ | REG_MULTI_SZ | REG_NONE | REG_SZ;
 	//if value is 234 ,it means out buffer is limit
-	iRes = RegQueryValueExA(hKey, szKeyName, 0, &iType, (LPBYTE)&szQueryValue, &iQueryLen);
+	iRes = lpRegQueryValueExA(hKey, szKeyName, 0, &iType, (LPBYTE)&szQueryValue, &iQueryLen);
 	if (iRes == ERROR_SUCCESS)
 	{
 		if (szQueryValue == dwKeyValue)
 		{
-			RegCloseKey(hKey);
+			lpRegCloseKey(hKey);
 			return TRUE;
 		}
 		else
 		{
-			iRes = RegSetValueExA(hKey, szKeyName, 0, REG_DWORD, (BYTE*)&dwKeyValue, sizeof(dwKeyValue));
+			iRes = lpRegSetValueExA(hKey, szKeyName, 0, REG_DWORD, (BYTE*)&dwKeyValue, sizeof(dwKeyValue));
 			if (iRes != ERROR_SUCCESS)
 			{
-				RegCloseKey(hKey);
+				lpRegCloseKey(hKey);
 				return FALSE;
 			}
 			else
 			{
 				//RegFlushKey(hKey);
-				RegCloseKey(hKey);
+				lpRegCloseKey(hKey);
 				return TRUE;
 			}
 		}
@@ -205,16 +205,16 @@ DWORD setKeyValueDword(HKEY hMainKey, char* szSubKey, char* szKeyName, DWORD dwK
 	else
 	{
 		iRes = GetLastError();
-		iRes = RegSetValueExA(hKey, szKeyName, 0, REG_DWORD, (BYTE*)&dwKeyValue, sizeof(dwKeyValue));
+		iRes = lpRegSetValueExA(hKey, szKeyName, 0, REG_DWORD, (BYTE*)&dwKeyValue, sizeof(dwKeyValue));
 		if (iRes != ERROR_SUCCESS)
 		{
-			RegCloseKey(hKey);
+			lpRegCloseKey(hKey);
 			return FALSE;
 		}
 		else
 		{
 			//RegFlushKey(hKey);
-			RegCloseKey(hKey);
+			lpRegCloseKey(hKey);
 			return TRUE;
 		}
 	}
@@ -252,7 +252,7 @@ int setRegBootRun(HKEY hMainKey, char* strResidence)
 	DWORD dwDisPos = 0;
 	HKEY hKey = 0;
 	int iRes = 0;
-	iRes = RegCreateKeyExA(hMainKey, path, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
+	iRes = lpRegCreateKeyExA(hMainKey, path, 0, REG_NONE, REG_OPTION_NON_VOLATILE, dwType, 0, &hKey, &dwDisPos);
 
 	if (osBits == 64 && hMainKey == HKEY_LOCAL_MACHINE)
 	{
@@ -268,10 +268,10 @@ int setRegBootRun(HKEY hMainKey, char* strResidence)
 	unsigned long valuelen = MAX_PATH;
 	unsigned long iType = REG_BINARY | REG_DWORD | REG_EXPAND_SZ | REG_MULTI_SZ | REG_NONE | REG_SZ;
 	//if value is 234 ,it means out buffer is limit
-	iRes = RegQueryValueExA(hKey, key, 0, &iType, value, &valuelen);
+	iRes = lpRegQueryValueExA(hKey, key, 0, &iType, value, &valuelen);
 	if (iRes == ERROR_SUCCESS && lstrcmpiA((char*)value, strResidence) == 0)
 	{
-		RegCloseKey(hKey);
+		lpRegCloseKey(hKey);
 		return TRUE;
 	}
 	else
@@ -279,9 +279,9 @@ int setRegBootRun(HKEY hMainKey, char* strResidence)
 		iRes = GetLastError();
 		//2 is not exist
 
-		iRes = RegSetValueExA(hKey, key, 0, REG_SZ, (unsigned char*)strResidence, lstrlenA(strResidence));
+		iRes = lpRegSetValueExA(hKey, key, 0, REG_SZ, (unsigned char*)strResidence, lstrlenA(strResidence));
 		//RegFlushKey(hKey);
-		RegCloseKey(hKey);
+		lpRegCloseKey(hKey);
 		if (iRes != ERROR_SUCCESS)
 		{
 			return FALSE;

@@ -3,7 +3,7 @@
 #include <windows.h>
 
 #include "strHelper.h"
-
+#include "api.h"
 
 std::wstring& string2wstring(std::string& astr, std::wstring& wstr)
 {

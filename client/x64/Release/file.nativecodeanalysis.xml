@@ -7,167 +7,12 @@
       <LINE>201</LINE>
       <COLUMN>17</COLUMN>
     </SFA>
-    <DEFECTCODE>6328</DEFECTCODE>
-    <DESCRIPTION>大小不匹配: 已将“__int64”作为 _Param_(3) 传递，但需要使用“int”来调用“wsprintfA”。</DESCRIPTION>
-    <FUNCTION>refreshAllFiles</FUNCTION>
-    <DECORATED>?refreshAllFiles@@YAHXZ</DECORATED>
-    <FUNCLINE>171</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
-      <FILENAME>file.cpp</FILENAME>
-      <LINE>201</LINE>
-      <COLUMN>17</COLUMN>
-    </SFA>
     <DEFECTCODE>6340</DEFECTCODE>
-    <DESCRIPTION>符号不匹配: 已将“__int64”作为 _Param_(3) 传递，但需要使用一些 unsigned 类型来调用“wsprintfA”。</DESCRIPTION>
+    <DESCRIPTION>符号不匹配: 已将“int”作为 _Param_(3) 传递，但需要使用一些 unsigned 类型来调用“wsprintfA”。</DESCRIPTION>
     <FUNCTION>refreshAllFiles</FUNCTION>
     <DECORATED>?refreshAllFiles@@YAHXZ</DECORATED>
     <FUNCLINE>171</FUNCLINE>
     <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
-      <FILENAME>file.cpp</FILENAME>
-      <LINE>193</LINE>
-      <COLUMN>15</COLUMN>
-    </SFA>
-    <DEFECTCODE>28193</DEFECTCODE>
-    <DESCRIPTION>“ret”保存了一个必须检查的值。</DESCRIPTION>
-    <FUNCTION>refreshAllFiles</FUNCTION>
-    <DECORATED>?refreshAllFiles@@YAHXZ</DECORATED>
-    <FUNCLINE>171</FUNCLINE>
-    <PATH>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>172</LINE>
-        <COLUMN>8</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>174</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>176</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>178</LINE>
-        <COLUMN>7</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>180</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>182</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>184</LINE>
-        <COLUMN>8</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>186</LINE>
-        <COLUMN>6</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>187</LINE>
-        <COLUMN>8</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>188</LINE>
-        <COLUMN>8</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>192</LINE>
-        <COLUMN>10</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>193</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>194</LINE>
-        <COLUMN>20</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>196</LINE>
-        <COLUMN>8</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>198</LINE>
-        <COLUMN>8</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>199</LINE>
-        <COLUMN>16</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>207</LINE>
-        <COLUMN>12</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>209</LINE>
-        <COLUMN>5</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>196</LINE>
-        <COLUMN>16</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>172</LINE>
-        <COLUMN>14</COLUMN>
-      </SFA>
-      <SFA>
-        <FILEPATH>c:\users\ljg\locust_client\client\</FILEPATH>
-        <FILENAME>file.cpp</FILENAME>
-        <LINE>211</LINE>
-        <COLUMN>1</COLUMN>
-      </SFA>
-    </PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
@@ -264,12 +109,6 @@
         <FILENAME>file.cpp</FILENAME>
         <LINE>193</LINE>
         <COLUMN>5</COLUMN>
-        <KEYEVENT>
-          <ID>2</ID>
-          <KIND>declaration</KIND>
-          <IMPORTANCE>Full</IMPORTANCE>
-          <MESSAGE>“data”是“ReadFile”中的输出(在 c:\program files (x86)\windows kits\10\include\10.0.22000.0\um\fileapi.h:979 处声明)</MESSAGE>
-        </KEYEVENT>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
@@ -283,7 +122,7 @@
         <LINE>196</LINE>
         <COLUMN>8</COLUMN>
         <KEYEVENT>
-          <ID>3</ID>
+          <ID>2</ID>
           <KIND>usage</KIND>
           <IMPORTANCE>Full</IMPORTANCE>
           <MESSAGE>“data”是对“std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt;::{ctor}”的输入(在 c:\program files (x86)\microsoft visual studio\2019\community\vc\tools\msvc\14.29.30133\include\xstring:2483 处声明)</MESSAGE>
@@ -295,7 +134,7 @@
         <LINE>196</LINE>
         <COLUMN>8</COLUMN>
         <KEYEVENT>
-          <ID>4</ID>
+          <ID>3</ID>
           <KIND>usage</KIND>
           <IMPORTANCE>Essential</IMPORTANCE>
           <MESSAGE>“data”必须由“{ctor}”上的 SAL 批注添加字符串零终止符</MESSAGE>

@@ -1,0 +1,2 @@
+^C:\USERS\LJG\LOCUST_CLIENT\CLIENT\ASM.ASM
+ml64 /Fo x64\Debug\asm.obj /c asm.asm

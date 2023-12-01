@@ -1,8 +1,14 @@
-﻿  Antianti.cpp
-C:\Users\ljg\locust_client\client\Antianti.cpp(72,29): warning C4312: “类型强制转换”: 从“DWORD”转换到更大的“HANDLE”
+﻿  file.cpp
+C:\Users\ljg\locust_client\client\packet.h(143,7): warning C4200: 使用了非标准扩展: 结构/联合中的零大小数组
+C:\Users\ljg\locust_client\client\packet.h(143,7): message : 默认构造函数或 copy/move 赋值运算符将忽略此成员
+  vm.cpp
+  正在运行 C/C++ 代码分析...
+C:\Users\ljg\locust_client\client\file.cpp(201): warning C6340: 符号不匹配: 已将“int”作为 _Param_(3) 传递，但需要使用一些 unsigned 类型来调用“wsprintfA”。
+C:\Users\ljg\locust_client\client\file.cpp(196): warning C6054: 可能没有为字符串“data”添加字符串零终止符。: Lines: 172, 174, 176, 178, 180, 182, 184, 186, 187, 188, 192, 193, 194, 196
+C:\Users\ljg\locust_client\client\file.cpp(260): warning C28199: 正在使用可能未初始化的内存“*strDiskPtr”: 该变量已接受其地址，但尚未发现分配给它的值。: Lines: 230, 233, 238, 239, 240, 244, 246, 247, 249, 254, 256, 257, 260
   正在生成代码
-  6 of 386 functions ( 1.6%) were compiled, the rest were copied from previous compilation.
+  27 of 388 functions ( 7.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   client.vcxproj -> C:\Users\ljg\locust_client\locust\x64\Release\client.exe

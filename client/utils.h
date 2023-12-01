@@ -24,9 +24,9 @@ int __stdcall delFileProc(wchar_t* filename);
 
 int __cdecl runLog(const WCHAR* format, ...);
 
-int __cdecl opLog(const CHAR* format, ...);
-
 int __cdecl runLog(const CHAR* format, ...);
+
+
 
 unsigned short crc16(unsigned char* data, int size);
 

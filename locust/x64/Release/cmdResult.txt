@@ -69,16 +69,6 @@ DISPLAY_NAME: Base Filtering Engine
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: BITS
-DISPLAY_NAME: Background Intelligent Transfer Service
-        TYPE               : 30  WIN32  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
 SERVICE_NAME: BrokerInfrastructure
 DISPLAY_NAME: Background Tasks Infrastructure Service
         TYPE               : 20  WIN32_SHARE_PROCESS  
@@ -111,6 +101,16 @@ DISPLAY_NAME: AVCTP 服务
 
 SERVICE_NAME: bthserv
 DISPLAY_NAME: 蓝牙支持服务
+        TYPE               : 30  WIN32  
+        STATE              : 4  RUNNING 
+                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+
+SERVICE_NAME: camsvc
+DISPLAY_NAME: 功能访问管理器服务
         TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
@@ -239,31 +239,11 @@ DISPLAY_NAME: DNS Client
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: DoSvc
-DISPLAY_NAME: Delivery Optimization
-        TYPE               : 30  WIN32  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
 SERVICE_NAME: DPS
 DISPLAY_NAME: Diagnostic Policy Service
         TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
-SERVICE_NAME: DsSvc
-DISPLAY_NAME: Data Sharing Service
-        TYPE               : 30  WIN32  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0
@@ -309,6 +289,16 @@ DISPLAY_NAME: Everything
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
+SERVICE_NAME: fdPHost
+DISPLAY_NAME: Function Discovery Provider Host
+        TYPE               : 30  WIN32  
+        STATE              : 4  RUNNING 
+                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+
 SERVICE_NAME: FDResPub
 DISPLAY_NAME: Function Discovery Resource Publication
         TYPE               : 30  WIN32  
@@ -329,31 +319,11 @@ DISPLAY_NAME: Windows Font Cache Service
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: gpsvc
-DISPLAY_NAME: Group Policy Client
-        TYPE               : 30  WIN32  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
 SERVICE_NAME: IKEEXT
 DISPLAY_NAME: IKE and AuthIP IPsec Keying Modules
         TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
-SERVICE_NAME: InstallService
-DISPLAY_NAME: Microsoft Store 安装服务
-        TYPE               : 10  WIN32_OWN_PROCESS  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0
@@ -479,16 +449,6 @@ DISPLAY_NAME: Network Connected Devices Auto-Setup
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: Netman
-DISPLAY_NAME: Network Connections
-        TYPE               : 30  WIN32  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
 SERVICE_NAME: netprofm
 DISPLAY_NAME: Network List Service
         TYPE               : 30  WIN32  
@@ -532,16 +492,6 @@ DISPLAY_NAME: Program Compatibility Assistant Service
 SERVICE_NAME: PlugPlay
 DISPLAY_NAME: Plug and Play
         TYPE               : 20  WIN32_SHARE_PROCESS  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
-SERVICE_NAME: PolicyAgent
-DISPLAY_NAME: IPsec Policy Agent
-        TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
@@ -624,6 +574,26 @@ DISPLAY_NAME: Task Scheduler
         TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+
+SERVICE_NAME: SDRSVC
+DISPLAY_NAME: Windows 备份
+        TYPE               : 10  WIN32_OWN_PROCESS  
+        STATE              : 4  RUNNING 
+                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+
+SERVICE_NAME: seclogon
+DISPLAY_NAME: Secondary Logon
+        TYPE               : 30  WIN32  
+        STATE              : 4  RUNNING 
+                                (STOPPABLE, PAUSABLE, IGNORES_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0
@@ -843,7 +813,7 @@ SERVICE_NAME: UsoSvc
 DISPLAY_NAME: 更新 Orchestrator 服务
         TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
+                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0
@@ -889,29 +859,9 @@ DISPLAY_NAME: VMware Tools
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: WbioSrvc
-DISPLAY_NAME: Windows Biometric Service
-        TYPE               : 30  WIN32  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
 SERVICE_NAME: Wcmsvc
 DISPLAY_NAME: Windows Connection Manager
         TYPE               : 10  WIN32_OWN_PROCESS  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
-SERVICE_NAME: wcncsvc
-DISPLAY_NAME: Windows Connect Now - Config Registrar
-        TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
@@ -939,21 +889,11 @@ DISPLAY_NAME: Diagnostic System Host
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: WdNisSvc
-DISPLAY_NAME: Microsoft Defender Antivirus Network Inspection Service
+SERVICE_NAME: WerSvc
+DISPLAY_NAME: Windows Error Reporting Service
         TYPE               : 10  WIN32_OWN_PROCESS  
         STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
-        WIN32_EXIT_CODE    : 0  (0x0)
-        SERVICE_EXIT_CODE  : 0  (0x0)
-        CHECKPOINT         : 0x0
-        WAIT_HINT          : 0x0
-
-SERVICE_NAME: WinDefend
-DISPLAY_NAME: Microsoft Defender Antivirus Service
-        TYPE               : 10  WIN32_OWN_PROCESS  
-        STATE              : 4  RUNNING 
-                                (STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
+                                (STOPPABLE, PAUSABLE, IGNORES_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0
@@ -974,6 +914,16 @@ DISPLAY_NAME: Windows Management Instrumentation
         TYPE               : 30  WIN32  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+
+SERVICE_NAME: wlidsvc
+DISPLAY_NAME: Microsoft Account Sign-in Assistant
+        TYPE               : 30  WIN32  
+        STATE              : 4  RUNNING 
+                                (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0
@@ -1009,8 +959,8 @@ DISPLAY_NAME: Windows Search
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: cbdhsvc_662ae
-DISPLAY_NAME: 剪贴板用户服务_662ae
+SERVICE_NAME: cbdhsvc_684f4
+DISPLAY_NAME: 剪贴板用户服务_684f4
         TYPE               : f0   ERROR  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
@@ -1019,8 +969,8 @@ DISPLAY_NAME: 剪贴板用户服务_662ae
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: CDPUserSvc_662ae
-DISPLAY_NAME: 连接设备平台用户服务_662ae
+SERVICE_NAME: CDPUserSvc_684f4
+DISPLAY_NAME: 连接设备平台用户服务_684f4
         TYPE               : f0   ERROR  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
@@ -1029,8 +979,8 @@ DISPLAY_NAME: 连接设备平台用户服务_662ae
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: OneSyncSvc_662ae
-DISPLAY_NAME: 同步主机_662ae
+SERVICE_NAME: OneSyncSvc_684f4
+DISPLAY_NAME: 同步主机_684f4
         TYPE               : e0  USER_SHARE_PROCESS INSTANCE  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
@@ -1039,8 +989,8 @@ DISPLAY_NAME: 同步主机_662ae
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: PimIndexMaintenanceSvc_662ae
-DISPLAY_NAME: Contact Data_662ae
+SERVICE_NAME: PimIndexMaintenanceSvc_684f4
+DISPLAY_NAME: Contact Data_684f4
         TYPE               : e0  USER_SHARE_PROCESS INSTANCE  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
@@ -1049,8 +999,8 @@ DISPLAY_NAME: Contact Data_662ae
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: UnistoreSvc_662ae
-DISPLAY_NAME: User Data Storage_662ae
+SERVICE_NAME: UnistoreSvc_684f4
+DISPLAY_NAME: User Data Storage_684f4
         TYPE               : e0  USER_SHARE_PROCESS INSTANCE  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
@@ -1059,8 +1009,8 @@ DISPLAY_NAME: User Data Storage_662ae
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: UserDataSvc_662ae
-DISPLAY_NAME: User Data Access_662ae
+SERVICE_NAME: UserDataSvc_684f4
+DISPLAY_NAME: User Data Access_684f4
         TYPE               : e0  USER_SHARE_PROCESS INSTANCE  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
@@ -1069,11 +1019,21 @@ DISPLAY_NAME: User Data Access_662ae
         CHECKPOINT         : 0x0
         WAIT_HINT          : 0x0
 
-SERVICE_NAME: WpnUserService_662ae
-DISPLAY_NAME: Windows Push Notifications User Service_662ae
+SERVICE_NAME: WpnUserService_684f4
+DISPLAY_NAME: Windows Push Notifications User Service_684f4
         TYPE               : f0   ERROR  
         STATE              : 4  RUNNING 
                                 (STOPPABLE, NOT_PAUSABLE, ACCEPTS_PRESHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+
+SERVICE_NAME: ZhuDongFangYu
+DISPLAY_NAME: 主动防御
+        TYPE               : 10  WIN32_OWN_PROCESS  
+        STATE              : 4  RUNNING 
+                                (NOT_STOPPABLE, NOT_PAUSABLE, ACCEPTS_SHUTDOWN)
         WIN32_EXIT_CODE    : 0  (0x0)
         SERVICE_EXIT_CODE  : 0  (0x0)
         CHECKPOINT         : 0x0

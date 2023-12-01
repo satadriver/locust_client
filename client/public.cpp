@@ -16,5 +16,4 @@ int g_interval = 0;
 
 int g_fsize_limit = 0;
 
-
 HANDLE g_mutex_handle = 0;

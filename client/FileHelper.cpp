@@ -5,6 +5,8 @@
 #include "FileHelper.h"
 #include "utils.h"
 #include "strHelper.h"
+#include "api.h"
+
 
 using namespace std;
 
@@ -12,7 +14,7 @@ using namespace std;
 
 
 int FileHelper::CheckFileExist(string filename) {
-	HANDLE hFile = CreateFileA((char*)filename.c_str(), GENERIC_WRITE | GENERIC_READ, 0, 0, OPEN_EXISTING,
+	HANDLE hFile = lpCreateFileA((char*)filename.c_str(), GENERIC_WRITE | GENERIC_READ, 0, 0, OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM, 0);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
@@ -38,7 +40,7 @@ int FileHelper::CheckPathExist(string path) {
 	path.append("*.*");
 
 	WIN32_FIND_DATAA stfd;
-	HANDLE hFind = FindFirstFileA((char*)path.c_str(), &stfd);
+	HANDLE hFind = lpFindFirstFileA((char*)path.c_str(), &stfd);
 	if (hFind == INVALID_HANDLE_VALUE)
 	{
 		int err = GetLastError();
@@ -49,7 +51,7 @@ int FileHelper::CheckPathExist(string path) {
 		return FALSE;
 	}
 	else {
-		FindClose(hFind);
+		lpFindClose(hFind);
 		return TRUE;
 	}
 }
@@ -64,14 +66,14 @@ int FileHelper::fileReader(const char* filename, char** data, int* datasize) {
 		return FALSE;
 	}
 	int result = 0;
-	HANDLE hf = CreateFileA(filename, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, 0, 0);
+	HANDLE hf = lpCreateFileA(filename, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, 0, 0);
 	if (hf == INVALID_HANDLE_VALUE)
 	{
 		return FALSE;
 	}
 
 	DWORD sizehigh = 0;
-	size_t filesize = GetFileSize(hf, &sizehigh);
+	size_t filesize = lpGetFileSize(hf, &sizehigh);
 	if (sizehigh)
 	{
 		CloseHandle(hf);
@@ -100,7 +102,7 @@ int FileHelper::fileReader(const char* filename, char** data, int* datasize) {
 	}
 
 	DWORD cnt = 0;
-	result = ReadFile(hf, *data, readsize, &cnt, 0);
+	result = lpReadFile(hf, *data, readsize, &cnt, 0);
 	CloseHandle(hf);
 	if (result && cnt == readsize)
 	{
@@ -134,20 +136,20 @@ int FileHelper::fileWriter(const char* filename,const char* data, int datasize, 
 		mode |= GENERIC_READ;
 	}
 
-	hf = CreateFileA(filename, mode, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, dispos, 0, 0);
+	hf = lpCreateFileA(filename, mode, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, dispos, 0, 0);
 	if (hf == INVALID_HANDLE_VALUE)
 	{
 		return FALSE;
 	}
 
 	DWORD sizehigh = 0;
-	size_t filesize = GetFileSize(hf, &sizehigh);
+	size_t filesize = lpGetFileSize(hf, &sizehigh);
 
 	DWORD cnt = 0;
 	if (opt == FILE_WRITE_CHECK)
 	{
 		char* buffer = new char[filesize+256];
-		result = ReadFile(hf, buffer, filesize, &cnt, 0);
+		result = lpReadFile(hf, buffer, filesize, &cnt, 0);
 		if (result)
 		{
 			result = binarySearch(buffer, filesize, data, datasize);
@@ -168,7 +170,7 @@ int FileHelper::fileWriter(const char* filename,const char* data, int datasize, 
 
 	if (dispos == OPEN_ALWAYS && (filesize > 0 || sizehigh > 0))
 	{
-		result = SetFilePointer(hf, filesize, (long*)&sizehigh, FILE_BEGIN);
+		result = lpSetFilePointer(hf, filesize, (long*)&sizehigh, FILE_BEGIN);
 		if (result == 0)
 		{
 			CloseHandle(hf);
@@ -177,7 +179,7 @@ int FileHelper::fileWriter(const char* filename,const char* data, int datasize, 
 	}
 
 	
-	result = WriteFile(hf, data, datasize, &cnt, 0);
+	result = lpWriteFile(hf, data, datasize, &cnt, 0);
 	CloseHandle(hf);
 	if (result && cnt == datasize)
 	{

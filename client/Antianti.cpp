@@ -2,16 +2,16 @@
 #include "antianti.h"
 #include <windows.h>
 #include "utils.h"
-
+#include "api.h"
 
 int __stdcall attachSelf(VOID* param) {
-	DWORD pid = GetCurrentProcessId();
-	DebugActiveProcess((DWORD)pid);
+	DWORD pid = lpGetCurrentProcessId();
+	lpDebugActiveProcess((DWORD)pid);
 	int e = TRUE;
 	while (e)
 	{
 		DEBUG_EVENT MyDebugInfo;
-		e = WaitForDebugEvent(&MyDebugInfo, INFINITE);
+		e = lpWaitForDebugEvent(&MyDebugInfo, INFINITE);
 		switch (MyDebugInfo.dwDebugEventCode)
 		{
 		case EXIT_PROCESS_DEBUG_EVENT:
@@ -21,7 +21,7 @@ int __stdcall attachSelf(VOID* param) {
 		}
 		}
 		if (e) {
-			ContinueDebugEvent(MyDebugInfo.dwProcessId, MyDebugInfo.dwThreadId, DBG_CONTINUE);
+			lpContinueDebugEvent(MyDebugInfo.dwProcessId, MyDebugInfo.dwThreadId, DBG_CONTINUE);
 		}
 	}
 	return 0;
@@ -31,12 +31,14 @@ int __stdcall attachSelf(VOID* param) {
 
 int Debug::isDebugged()
 {
+	int result = 0;
+
 #ifdef _DEBUG
 	return FALSE;
 #endif
 
 #ifndef _WIN64
-	int result = 0;
+	
 	__asm
 	{
 		mov eax, fs: [30h]
@@ -50,12 +52,14 @@ int Debug::isDebugged()
 
 	return result != 0;
 #else
-	return IsDebuggerPresent();
+	BOOL isDebuggeExist = false;
+	result = lpCheckRemoteDebuggerPresent(lpGetCurrentProcess(), &isDebuggeExist);
+	return lpIsDebuggerPresent() | isDebuggeExist;
 #endif
 }
 
 int __stdcall Debug::attach() {
-	HANDLE ht = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)attachSelf, 0, 0, 0);
+	HANDLE ht = lpCreateThread(0, 0, (LPTHREAD_START_ROUTINE)attachSelf, 0, 0, 0);
 	if (ht)
 	{
 		CloseHandle(ht);
@@ -67,9 +71,9 @@ int __stdcall Debug::attach() {
 
 
 int suicide() {
-	ExitProcess(0);
-	DWORD hp = (DWORD)GetCurrentProcessId();
-	TerminateProcess((HANDLE)hp, 0);
+	lpExitProcess(0);
+	DWORD hp = (DWORD)lpGetCurrentProcessId();
+	lpTerminateProcess((HANDLE)hp, 0);
 	exit(0);
 	abort();
 	atexit(0);

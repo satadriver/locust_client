@@ -4,56 +4,56 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>uuid.cpp</FILENAME>
-      <LINE>334</LINE>
+      <LINE>346</LINE>
       <COLUMN>9</COLUMN>
     </SFA>
     <DEFECTCODE>6340</DEFECTCODE>
     <DESCRIPTION>符号不匹配: 已将“unsigned char”作为 _Param_(2) 传递，但需要使用一些 signed 类型来调用“printf”。</DESCRIPTION>
     <FUNCTION>getUUID2</FUNCTION>
     <DECORATED>?getUUID2@@YAHXZ</DECORATED>
-    <FUNCLINE>292</FUNCLINE>
+    <FUNCLINE>304</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>uuid.cpp</FILENAME>
-      <LINE>340</LINE>
+      <LINE>352</LINE>
       <COLUMN>10</COLUMN>
     </SFA>
     <DEFECTCODE>6340</DEFECTCODE>
     <DESCRIPTION>符号不匹配: 已将“unsigned char”作为 _Param_(2) 传递，但需要使用一些 signed 类型来调用“printf”。</DESCRIPTION>
     <FUNCTION>getUUID2</FUNCTION>
     <DECORATED>?getUUID2@@YAHXZ</DECORATED>
-    <FUNCLINE>292</FUNCLINE>
+    <FUNCLINE>304</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>uuid.cpp</FILENAME>
-      <LINE>340</LINE>
+      <LINE>352</LINE>
       <COLUMN>10</COLUMN>
     </SFA>
     <DEFECTCODE>6340</DEFECTCODE>
     <DESCRIPTION>符号不匹配: 已将“unsigned char”作为 _Param_(3) 传递，但需要使用一些 signed 类型来调用“printf”。</DESCRIPTION>
     <FUNCTION>getUUID2</FUNCTION>
     <DECORATED>?getUUID2@@YAHXZ</DECORATED>
-    <FUNCLINE>292</FUNCLINE>
+    <FUNCLINE>304</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>uuid.cpp</FILENAME>
-      <LINE>347</LINE>
+      <LINE>359</LINE>
       <COLUMN>9</COLUMN>
     </SFA>
     <DEFECTCODE>6340</DEFECTCODE>
     <DESCRIPTION>符号不匹配: 已将“unsigned char”作为 _Param_(2) 传递，但需要使用一些 signed 类型来调用“printf”。</DESCRIPTION>
     <FUNCTION>getUUID2</FUNCTION>
     <DECORATED>?getUUID2@@YAHXZ</DECORATED>
-    <FUNCLINE>292</FUNCLINE>
+    <FUNCLINE>304</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
 </DEFECTS>

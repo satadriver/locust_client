@@ -4,56 +4,14 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>utils.cpp</FILENAME>
-      <LINE>276</LINE>
-      <COLUMN>16</COLUMN>
-    </SFA>
-    <DEFECTCODE>28159</DEFECTCODE>
-    <DESCRIPTION>考虑使用“CreateProcess”而不是“WinExec”。原因: Deprecated. See MSDN for details</DESCRIPTION>
-    <FUNCTION>restart</FUNCTION>
-    <DECORATED>?restart@@YAHPEBD0@Z</DECORATED>
-    <FUNCLINE>264</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
-      <FILENAME>utils.cpp</FILENAME>
-      <LINE>417</LINE>
-      <COLUMN>27</COLUMN>
-    </SFA>
-    <DEFECTCODE>6335</DEFECTCODE>
-    <DESCRIPTION>泄漏进程信息句柄“pi.hProcess”。</DESCRIPTION>
-    <FUNCTION>createProcessWithToken</FUNCTION>
-    <DECORATED>?createProcessWithToken@@YAHPEAD00@Z</DECORATED>
-    <FUNCLINE>367</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
-      <FILENAME>utils.cpp</FILENAME>
-      <LINE>417</LINE>
-      <COLUMN>27</COLUMN>
-    </SFA>
-    <DEFECTCODE>6335</DEFECTCODE>
-    <DESCRIPTION>泄漏进程信息句柄“pi.hThread”。</DESCRIPTION>
-    <FUNCTION>createProcessWithToken</FUNCTION>
-    <DECORATED>?createProcessWithToken@@YAHPEAD00@Z</DECORATED>
-    <FUNCLINE>367</FUNCLINE>
-    <PATH></PATH>
-  </DEFECT>
-  <DEFECT>
-    <SFA>
-      <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
-      <FILENAME>utils.cpp</FILENAME>
-      <LINE>403</LINE>
+      <LINE>385</LINE>
       <COLUMN>9</COLUMN>
     </SFA>
     <DEFECTCODE>6387</DEFECTCODE>
     <DESCRIPTION>“si.lpDesktop”可能是“0”: 这不符合函数“lstrcpyA”的规范。</DESCRIPTION>
     <FUNCTION>createProcessWithToken</FUNCTION>
     <DECORATED>?createProcessWithToken@@YAHPEAD00@Z</DECORATED>
-    <FUNCLINE>367</FUNCLINE>
+    <FUNCLINE>349</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -63,44 +21,44 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>369</LINE>
+        <LINE>351</LINE>
         <COLUMN>5</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>370</LINE>
+        <LINE>352</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>372</LINE>
+        <LINE>354</LINE>
         <COLUMN>16</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>373</LINE>
+        <LINE>355</LINE>
         <COLUMN>13</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>374</LINE>
+        <LINE>356</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>376</LINE>
-        <COLUMN>20</COLUMN>
+        <LINE>358</LINE>
+        <COLUMN>23</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>376</LINE>
-        <COLUMN>56</COLUMN>
+        <LINE>358</LINE>
+        <COLUMN>62</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
           <KIND>branch</KIND>
@@ -111,19 +69,19 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>378</LINE>
+        <LINE>360</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>379</LINE>
+        <LINE>361</LINE>
         <COLUMN>6</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>380</LINE>
+        <LINE>362</LINE>
         <COLUMN>63</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -135,13 +93,13 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>381</LINE>
+        <LINE>363</LINE>
         <COLUMN>10</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>382</LINE>
+        <LINE>364</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>3</ID>
@@ -153,25 +111,25 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>384</LINE>
+        <LINE>366</LINE>
         <COLUMN>8</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>385</LINE>
+        <LINE>367</LINE>
         <COLUMN>15</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>394</LINE>
+        <LINE>376</LINE>
         <COLUMN>12</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>396</LINE>
+        <LINE>378</LINE>
         <COLUMN>12</COLUMN>
         <KEYEVENT>
           <ID>4</ID>
@@ -183,25 +141,25 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>400</LINE>
+        <LINE>382</LINE>
         <COLUMN>21</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>401</LINE>
+        <LINE>383</LINE>
         <COLUMN>14</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>402</LINE>
+        <LINE>384</LINE>
         <COLUMN>7</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>403</LINE>
+        <LINE>385</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>5</ID>
@@ -213,7 +171,7 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>403</LINE>
+        <LINE>385</LINE>
         <COLUMN>9</COLUMN>
         <KEYEVENT>
           <ID>6</ID>
@@ -228,14 +186,14 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>utils.cpp</FILENAME>
-      <LINE>560</LINE>
+      <LINE>542</LINE>
       <COLUMN>5</COLUMN>
     </SFA>
     <DEFECTCODE>6011</DEFECTCODE>
     <DESCRIPTION>取消对 NULL 指针“(unsigned char *)PEB+12”的引用。</DESCRIPTION>
     <FUNCTION>initOrderModule</FUNCTION>
     <DECORATED>?initOrderModule@@YAHXZ</DECORATED>
-    <FUNCLINE>544</FUNCLINE>
+    <FUNCLINE>526</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -245,7 +203,7 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>546</LINE>
+        <LINE>528</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -257,37 +215,37 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>547</LINE>
+        <LINE>529</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>548</LINE>
+        <LINE>530</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>549</LINE>
+        <LINE>531</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>550</LINE>
+        <LINE>532</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>551</LINE>
+        <LINE>533</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>560</LINE>
+        <LINE>542</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -302,14 +260,14 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>utils.cpp</FILENAME>
-      <LINE>589</LINE>
+      <LINE>571</LINE>
       <COLUMN>5</COLUMN>
     </SFA>
     <DEFECTCODE>6011</DEFECTCODE>
     <DESCRIPTION>取消对 NULL 指针“(unsigned char *)PEB+12”的引用。</DESCRIPTION>
     <FUNCTION>memoryOrderModule</FUNCTION>
     <DECORATED>?memoryOrderModule@@YAHXZ</DECORATED>
-    <FUNCLINE>574</FUNCLINE>
+    <FUNCLINE>556</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -319,7 +277,7 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>576</LINE>
+        <LINE>558</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -331,37 +289,37 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>577</LINE>
+        <LINE>559</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>578</LINE>
+        <LINE>560</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>579</LINE>
+        <LINE>561</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>580</LINE>
+        <LINE>562</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>581</LINE>
+        <LINE>563</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>589</LINE>
+        <LINE>571</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -376,14 +334,14 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>utils.cpp</FILENAME>
-      <LINE>618</LINE>
+      <LINE>600</LINE>
       <COLUMN>5</COLUMN>
     </SFA>
     <DEFECTCODE>6011</DEFECTCODE>
     <DESCRIPTION>取消对 NULL 指针“(unsigned char *)PEB+12”的引用。</DESCRIPTION>
     <FUNCTION>loadOrderModule</FUNCTION>
     <DECORATED>?loadOrderModule@@YAHXZ</DECORATED>
-    <FUNCLINE>603</FUNCLINE>
+    <FUNCLINE>585</FUNCLINE>
     <PROBABILITY>1</PROBABILITY>
     <RANK>4</RANK>
     <CATEGORY>
@@ -393,7 +351,7 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>605</LINE>
+        <LINE>587</LINE>
         <COLUMN>7</COLUMN>
         <KEYEVENT>
           <ID>1</ID>
@@ -405,37 +363,37 @@
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>606</LINE>
+        <LINE>588</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>607</LINE>
+        <LINE>589</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>608</LINE>
+        <LINE>590</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>609</LINE>
+        <LINE>591</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>610</LINE>
+        <LINE>592</LINE>
         <COLUMN>4</COLUMN>
       </SFA>
       <SFA>
         <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
         <FILENAME>utils.cpp</FILENAME>
-        <LINE>618</LINE>
+        <LINE>600</LINE>
         <COLUMN>5</COLUMN>
         <KEYEVENT>
           <ID>2</ID>
@@ -450,28 +408,28 @@
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>utils.cpp</FILENAME>
-      <LINE>648</LINE>
+      <LINE>630</LINE>
       <COLUMN>15</COLUMN>
     </SFA>
     <DEFECTCODE>6400</DEFECTCODE>
     <DESCRIPTION>使用“lstrcmpiA”执行与常量字符串“kernel32.dll”的不区分大小写的比较。 这样会在非英语区域设置中产生意外结果。</DESCRIPTION>
     <FUNCTION>getModules</FUNCTION>
     <DECORATED>?getModules@@YAHXZ</DECORATED>
-    <FUNCLINE>632</FUNCLINE>
+    <FUNCLINE>614</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
   <DEFECT>
     <SFA>
       <FILEPATH>C:\Users\ljg\locust_client\client\</FILEPATH>
       <FILENAME>utils.cpp</FILENAME>
-      <LINE>648</LINE>
+      <LINE>630</LINE>
       <COLUMN>59</COLUMN>
     </SFA>
     <DEFECTCODE>6400</DEFECTCODE>
     <DESCRIPTION>使用“lstrcmpiA”执行与常量字符串“ntdll.dll”的不区分大小写的比较。 这样会在非英语区域设置中产生意外结果。</DESCRIPTION>
     <FUNCTION>getModules</FUNCTION>
     <DECORATED>?getModules@@YAHXZ</DECORATED>
-    <FUNCLINE>632</FUNCLINE>
+    <FUNCLINE>614</FUNCLINE>
     <PATH></PATH>
   </DEFECT>
 </DEFECTS>

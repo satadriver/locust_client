@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="Antianti.cpp" />
     <ClCompile Include="AntiDetect.cpp" />
+    <ClCompile Include="api.cpp" />
     <ClCompile Include="base64.cpp" />
     <ClCompile Include="command.cpp" />
     <ClCompile Include="file.cpp" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <ClInclude Include="AntiAnti.h" />
     <ClInclude Include="AntiDetect.h" />
+    <ClInclude Include="api.h" />
     <ClInclude Include="base64.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="file.h" />

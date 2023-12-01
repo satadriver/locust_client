@@ -13,6 +13,7 @@
 
 #include "utils.h"
 #include "strHelper.h"
+#include "api.h"
 
 # pragma comment(lib, "wbemuuid.lib")
 
@@ -24,13 +25,13 @@ using namespace std;
 int getWIndowsUUID(WCHAR * uuid,int size)
 {
 	HRESULT hres;
-	hres = CoInitializeEx(0, COINIT_MULTITHREADED);
+	hres = lpCoInitializeEx(0, COINIT_MULTITHREADED);
 	if (FAILED(hres))
 	{
 		return FALSE;  
 	}
 
-	hres = CoInitializeSecurity(
+	hres = lpCoInitializeSecurity(
 		NULL,
 		-1,                          // COM authentication
 		NULL,                        // Authentication services
@@ -43,15 +44,15 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 	);
 	if (FAILED(hres))
 	{
-		CoUninitialize();
+		lpCoUninitialize();
 		return FALSE; 
 	}
 
 	IWbemLocator* pLoc = NULL;
-	hres = CoCreateInstance(CLSID_WbemLocator,0,CLSCTX_INPROC_SERVER,IID_IWbemLocator, (LPVOID*)&pLoc);
+	hres = lpCoCreateInstance(CLSID_WbemLocator,0,CLSCTX_INPROC_SERVER,IID_IWbemLocator, (LPVOID*)&pLoc);
 	if (FAILED(hres))
 	{
-		CoUninitialize();
+		lpCoUninitialize();
 		return FALSE;  
 	}
 
@@ -61,8 +62,19 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 	// the current user and obtain pointer pSvc
 	// to make IWbemServices calls.
 
+
+	WCHAR wmi_name[] = { 'R','O','O','T','\\','C','I','M','V','2',0 };
+
+	WCHAR sql_cmd[] = 
+	{ 'S','E','L','E','C','T',' ','*',' ','F','R','O','M',' ',\
+		'W','i','n','3','2','_','C','o','m','p','u','t','e','r','S','y','s','t','e','m','P','r','o','d','u','c','t',0 };
+
+	WCHAR language_name[] = { 'W','Q','L',0 };
+
+	WCHAR uuid_name[] = { 'U','U','I','D',0 };
+
 	hres = pLoc->ConnectServer(
-		_bstr_t(L"ROOT\\CIMV2"), // Object path of WMI namespace
+		_bstr_t(wmi_name), // Object path of WMI namespace
 		NULL,                    // User name. NULL = current user
 		NULL,                    // User password. NULL = current
 		0,                       // Locale. NULL indicates current
@@ -74,14 +86,14 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 	if (FAILED(hres))
 	{
 		pLoc->Release();
-		CoUninitialize();
+		lpCoUninitialize();
 		return FALSE;  
 	}
 
 	//cout << "Connected to ROOT\\CIMV2 WMI namespace" << endl;
 
 	// Set security levels on the proxy -------------------------
-	hres = CoSetProxyBlanket(
+	hres = lpCoSetProxyBlanket(
 		pSvc,                        // Indicates the proxy to se
 		RPC_C_AUTHN_WINNT,           // RPC_C_AUTHN_xxx
 		RPC_C_AUTHZ_NONE,            // RPC_C_AUTHZ_xxx
@@ -95,7 +107,7 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 	{
 		pSvc->Release();
 		pLoc->Release();
-		CoUninitialize();
+		lpCoUninitialize();
 		return FALSE;
 	}
 
@@ -103,8 +115,8 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 	// For example, get the name of the operating system
 	IEnumWbemClassObject* pEnumerator = NULL;
 	hres = pSvc->ExecQuery(
-		bstr_t("WQL"),
-		bstr_t("SELECT * FROM Win32_ComputerSystemProduct"),
+		bstr_t(language_name),
+		bstr_t(sql_cmd),
 		WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
 		NULL,
 		&pEnumerator);
@@ -112,7 +124,7 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 	{
 		pSvc->Release();
 		pLoc->Release();
-		CoUninitialize();
+		lpCoUninitialize();
 		return FALSE;
 	}
 
@@ -129,7 +141,7 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 		}
 		VARIANT vtProp = { 0 };
 		// Get the value of the Name property
-		hr = pclsObj->Get(L"UUID", 0, &vtProp, 0, 0);
+		hr = pclsObj->Get(uuid_name, 0, &vtProp, 0, 0);
 		//wcout << " OS Name : " << vtProp.bstrVal << endl;
 		wcscpy(uuid, vtProp.bstrVal);
 		VariantClear(&vtProp);
@@ -139,7 +151,7 @@ int getWIndowsUUID(WCHAR * uuid,int size)
 	pLoc->Release();
 	pEnumerator->Release();
 
-	CoUninitialize();
+	lpCoUninitialize();
 
 	return 0;
 }
@@ -292,7 +304,7 @@ const char* dmi_string(const dmi_header* dm, BYTE s)
 int getUUID2()
 {
 	DWORD bufsize = 0;
-	BYTE buf[0x4000] = { 0 };
+	BYTE buf[0x1000] = { 0 };
 	int ret = 0;
 	RawSMBIOSData* Smbios;
 	dmi_header* h = NULL;
